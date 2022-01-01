@@ -50,7 +50,7 @@ function generateRefreshTokenFor(identity) {
     return generateTokenFor(identity);
 }
 
-exports.preSignIn = async (req, res) => {
+exports.preSignIn = async (req, res, next) => {
     // presign token is in the format: base64(clientId:codeChallenge)
     try {
         let preAuthorizationHeader = Buffer.from(req.headers['Pre-Authorization'].split('Bearer ')[1], 'base64');
@@ -62,7 +62,7 @@ exports.preSignIn = async (req, res) => {
             signInId: addChallenge(codeChallenge, clientId)
         });
     } catch (err) {
-
+        next(err);
     }
 };
 
@@ -125,7 +125,7 @@ exports.postSignIn = async (req, res) => {
     });
 };
 
-exports.refresh_token = (req, res) => {
+exports.refreshToken = (req, res) => {
     try {
         var now = Math.floor(Date.now() / 1000);
         req.body.iat = now;
