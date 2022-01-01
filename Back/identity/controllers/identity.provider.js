@@ -56,13 +56,11 @@ exports.list = (req, res) => {
         })
 };
 
-exports.getById = (req, res) => {
+exports.getById = async (req, res) => {
     const token = req.headers['authorization'].split('Bearer ')[1];
-    console.log(token);
-    console.log(req.headers);
 
     const secretKey = fs.readFileSync(config['key-file']);
-    const x = jwt.verify(token, secretKey);
+    const x = jwt.verify(token, secretKey, { algorithms: 'RS512' });
     console.log(x);
 
     IdentityModel.findById(req.params.userId)
