@@ -6,8 +6,8 @@ const crypto = require('crypto');
 const fs = require('fs');
 const IdentityModel = require('../../models/identity.schema');
 
-const { hmacsha256 } = require('crypto-js/hmac-sha256');
-const { Base64 } = require('crypto-js/enc-base64');
+const hmacsha256 = require('crypto-js/hmac-sha256');
+const Base64 = require('crypto-js/enc-base64');
 
 const cert = fs.readFileSync(config['key-file']);
 
