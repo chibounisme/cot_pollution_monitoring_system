@@ -21,13 +21,6 @@ const identitySchema = new Schema({
     collection: 'identities'
 });
 
-identitySchema.virtual('fullName')
-    .get(() => { return this.firstname + ' ' + this.lastname; })
-    .set((v) => {
-        this.firstname = v.substr(0, v.lastIndexOf(' '));
-        this.lastname = v.substr(v.lastIndexOf(' ') + 1)
-    });
-
 identitySchema.methods.grantPermission = (permission) => {
     this.permissions |= (1 << permission);
 };

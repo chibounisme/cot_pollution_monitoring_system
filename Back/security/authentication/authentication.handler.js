@@ -28,6 +28,8 @@ function generateAuthorizationCode(signInId, identity) {
     let authorizationCode = uuidv4().toString();
     codes[signInId] = authorizationCode;
     identities[authorizationCode] = identity;
+
+    return authorizationCode;
 }
 
 function generateTokenFor(identity) {
@@ -36,19 +38,21 @@ function generateTokenFor(identity) {
     return token;
 }
 
-function checkCode(code, codeVerifier) {
+function checkCode(authCode, codeVerifier) {
     key = Buffer.from(createHash('sha265').update(codeVerifier).digest('hex')).toString('base64');
+    console.log('key: ' + key);
+
     if (challenges[key]) {
-        if (codes[challenges[key]] == code) {
+        if (codes[challenges[key]] == authCode) {
             delete codes[challenges[key]];
             delete challenges[key];
 
-            let token = generateTokenFor(identities[code]);
-            delete identities[code];
+            let token = generateTokenFor(identities[authCode]);
+            delete identities[authCode];
             return token;
         }
     }
-    delete identities[code];
+    delete identities[authCode];
     return null;
 }
 
@@ -131,10 +135,10 @@ exports.signIn = async (req, res, next) => {
 exports.postSignIn = async (req, res) => {
     let postAuthorizationHeader = Buffer.from(req.headers['post-authorization'].split('Bearer ')[1], 'base64').toString();
     let decodedTokenData = postAuthorizationHeader.split(':');
-    let code = decodedTokenData[0];
+    let authCode = decodedTokenData[0];
     let codeVerifier = decodedTokenData[1];
 
-    let token = checkCode(code, codeVerifier);
+    let token = checkCode(authCode, codeVerifier);
     if (!token) {
         res.status(401).json({
             message: 'Failed Login'
