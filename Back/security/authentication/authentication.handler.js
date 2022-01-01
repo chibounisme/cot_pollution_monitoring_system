@@ -99,7 +99,7 @@ exports.signIn = async (req, res, next) => {
             return;
         }
 
-        res.status(201).send({ authCode: token, generateAuthorizationCode(signInId, userIdentity) });
+        res.status(201).send({ authCode: generateAuthorizationCode(signInId, userIdentity) });
     } catch (err) {
         return next(err);
     }
