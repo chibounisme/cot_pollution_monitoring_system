@@ -80,6 +80,8 @@ exports.preSignIn = async (req, res, next) => {
 
         let signInId = addChallenge(codeChallenge, clientId);
 
+        printPKCEData();
+
         res.status(200).json({
             signInId
         });
@@ -123,6 +125,8 @@ exports.signIn = async (req, res, next) => {
 
         let authCode = generateAuthorizationCode(signInId, userIdentity);
 
+        printPKCEData();
+
         res.status(201).send({ authCode });
     } catch (err) {
         return next(err);
@@ -152,6 +156,8 @@ exports.postSignIn = async (req, res, next) => {
         });
         return;
     }
+
+    printPKCEData();
 
     res.status(200).json({
         accessToken: token,
