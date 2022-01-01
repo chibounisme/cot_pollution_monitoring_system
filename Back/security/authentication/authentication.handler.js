@@ -34,8 +34,11 @@ function generateAuthorizationCode(signInId, identity) {
 }
 
 function generateTokenFor(identity) {
-    console.log(identity.toJSON());
-    let token = jwt.sign(identity.toJSON(), cert, { algorithm: 'RS512' });
+    let token = jwt.sign({
+        username: identity.username,
+        email: identity.email,
+        permissions: identity.permissions
+    }, cert, { algorithm: 'RS512' });
 
     return token;
 }
