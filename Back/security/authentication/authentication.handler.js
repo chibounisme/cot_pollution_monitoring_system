@@ -55,7 +55,7 @@ exports.preSignIn = async (req, res, next) => {
     try {
         console.log(req.headers);
         preAuthorization = req.headers['pre-authorization'];
-        console.log(preAuthorization);
+        console.log(preAuthorization.split('Bearer '));
 
         let preAuthorizationHeader = Buffer.from(preAuthorization.split('Bearer ')[1], 'base64');
         let decodedTokenData = preAuthorizationHeader.split(':');
