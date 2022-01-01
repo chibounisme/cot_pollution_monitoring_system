@@ -13,8 +13,8 @@ let identities = {};
 
 function printPKCEData() {
     console.log('challenges: ' + JSON.stringify(challenges, null, 2));
-    console.log('codes: ' + SON.stringify(codes, null, 2));
-    console.log('identities: ' + SON.stringify(identities, null, 2));
+    console.log('codes: ' + JSON.stringify(codes, null, 2));
+    console.log('identities: ' + JSON.stringify(identities, null, 2));
 }
 
 function addChallenge(codechallenge, clientId) {
