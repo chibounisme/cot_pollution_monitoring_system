@@ -55,7 +55,7 @@ exports.preSignIn = async (req, res, next) => {
     try {
         preAuthorization = req.headers['pre-authorization'];
 
-        let preAuthorizationHeader = Buffer.from(preAuthorization.split('Bearer ')[1], 'base64');
+        let preAuthorizationHeader = Buffer.from(preAuthorization.split('Bearer ')[1], 'base64').toString();
         console.log(preAuthorizationHeader);
         let decodedTokenData = preAuthorizationHeader.split(':');
         let clientId = decodedTokenData[0];
@@ -118,7 +118,7 @@ exports.signIn = async (req, res, next) => {
 };
 
 exports.postSignIn = async (req, res) => {
-    let postAuthorizationHeader = Buffer.from(req.headers['Post-Authorization'].split('Bearer ')[1], 'base64');
+    let postAuthorizationHeader = Buffer.from(req.headers['post-authorization'].split('Bearer ')[1], 'base64').toString();
     let decodedTokenData = postAuthorizationHeader.split(':');
     let code = decodedTokenData[0];
     let codeVerifier = decodedTokenData[1];
