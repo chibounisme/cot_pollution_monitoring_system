@@ -52,7 +52,7 @@ function checkCode(authCode, codeVerifier) {
     if (challenges[key]) {
         if (codes[challenges[key]] == authCode) {
             let token = generateTokenFor(identities[authCode]);
-            
+
             delete codes[challenges[key]];
             delete challenges[key];
             delete identities[authCode];
@@ -76,8 +76,8 @@ exports.preSignIn = async (req, res, next) => {
         let decodedTokenData = preAuthorizationHeader.split(':');
         let clientId = decodedTokenData[0];
         let codeChallenge = decodedTokenData[1];
-        
-        let signInId =  addChallenge(codeChallenge, clientId);
+
+        let signInId = addChallenge(codeChallenge, clientId);
 
         res.status(200).json({
             signInId
@@ -120,9 +120,9 @@ exports.signIn = async (req, res, next) => {
             return;
         }
 
-        let authCode =  generateAuthorizationCode(signInId, userIdentity);
+        let authCode = generateAuthorizationCode(signInId, userIdentity);
 
-        res.status(201).send({ authCode });
+        res.status(201).send({ authCode, userId: userIdentity._id });
     } catch (err) {
         return next(err);
     }

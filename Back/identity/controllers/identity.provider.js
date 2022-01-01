@@ -60,11 +60,14 @@ exports.getById = async (req, res) => {
     const token = req.headers['authorization'].split('Bearer ')[1];
 
     const secretKey = fs.readFileSync(config['key-file']);
-    const x = jwt.verify(token, secretKey, { algorithms: 'RS512' });
-    console.log(x);
-
-    IdentityModel.findById(req.params.userId)
-        .then((result) => {
-            res.status(200).send(result);
+    const payload = jwt.verify(token, secretKey, { algorithms: 'RS512' });
+    if (!paylod) {
+        res.status(402).json({
+            message: 'Invalid JWT'
         });
+        return;
+    }
+
+    result = await IdentityModel.Identity.findById(req.params.userId);
+    res.status(200).send(JSON.stringify(result));
 };

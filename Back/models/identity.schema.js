@@ -34,16 +34,6 @@ const Identity = mongoose.model('Identity', identitySchema);
 
 exports.Identity = Identity;
 
-exports.findById = (id) => {
-    return Identity.findById(id)
-        .then((result) => {
-            result = result.toJSON();
-            delete result._id;
-            delete result.__v;
-            return result;
-        });
-};
-
 exports.createIdentity = (identityData) => {
     const identity = new Identity(identityData);
     return identity.save();
