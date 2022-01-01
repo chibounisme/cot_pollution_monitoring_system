@@ -40,7 +40,9 @@ function generateTokenFor(identity) {
 
 function checkCode(authCode, codeVerifier) {
     console.log('generating sha265 hash');
-    let sha265String = crypto.createHmac('sha265', config['SHA265_secret']).update(codeVerifier).digest('hex');
+    let hmac = crypto.createHmac('sha265', config['SHA265_secret']);
+    hmac.update(codeVerifier);
+    let sha265String = hmac.digest('hex');
     console.log(sha265String);
     key = Buffer.from().toString('base64');
     console.log('key: ' + key);
