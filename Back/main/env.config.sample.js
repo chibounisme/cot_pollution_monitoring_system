@@ -1,4 +1,5 @@
 module.exports = {
+    'SHA265_secret': '',
     'actualRefreshSecret': '',
     'jwtValidityTimeInSeconds': '',
     'key-file': '',

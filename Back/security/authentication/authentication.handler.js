@@ -2,7 +2,7 @@ const config = require('../../main/env.config.js');
 const jwt = require('jsonwebtoken');
 const { v4: uuidv4 } = require('uuid');
 const argon2 = require('argon2');
-const { createHash } = require('crypto');
+const crypto = require('crypto');
 const IdentityModel = require('../../models/identity.schema');
 
 const cert = config['cert-file'];
@@ -40,7 +40,7 @@ function generateTokenFor(identity) {
 
 function checkCode(authCode, codeVerifier) {
     console.log('generating sha265 hash');
-    let sha265String = createHash('sha265').update(codeVerifier).update(codeVerifier).digest('hex');
+    let sha265String = crypto.createHmac('sha265', config['SHA265_secret']).update(codeVerifier).digest('hex');
     console.log(sha265String);
     key = Buffer.from().toString('base64');
     console.log('key: ' + key);
