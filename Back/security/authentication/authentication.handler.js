@@ -3,6 +3,7 @@ const jwt = require('jsonwebtoken');
 const { v4: uuidv4 } = require('uuid');
 const argon2 = require('argon2');
 const crypto = require('crypto');
+const fs = require('fs');
 const IdentityModel = require('../../models/identity.schema');
 
 const cert = fs.readFileSync(config['key-file']);
