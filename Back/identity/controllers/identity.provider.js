@@ -4,8 +4,6 @@ const jwt = require('jsonwebtoken');
 const config = require('../../main/env.config');
 const fs = require('fs');
 
-fs.readFileSync()
-
 exports.signUp = async (req, res, next) => {
     if (req.body == {} || !(req.body.username && req.body.email && req.body.password && req.body.firstname && req.body.lastname)) {
         res.status(400).send({
