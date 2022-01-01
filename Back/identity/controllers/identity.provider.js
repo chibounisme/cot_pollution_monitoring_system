@@ -12,8 +12,6 @@ exports.signUp = async (req, res, next) => {
     try {
         let existsWithEmailOrUsername = await IdentityModel.Identity.find().or([{ email: { $eq: req.body.email } }, { username: { $eq: req.body.username } }]);
 
-        console.log(res)
-
         if (!existsWithEmailOrUsername || existsWithEmailOrUsername == []) {
             res.status(401).send({
                 message: 'User with email or username already exists!'
