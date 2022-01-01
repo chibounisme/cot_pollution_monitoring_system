@@ -160,6 +160,7 @@ exports.refreshToken = async (req, res) => {
             });
             return;
         }
+        console.log(payload);
 
         let userIdentity = await IdentityModel.Identity.findById(payload.id);
         if (!result) {
