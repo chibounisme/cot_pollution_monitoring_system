@@ -29,10 +29,10 @@ app.use((req, _, next) => {
 // create the server
 const server = tls.createServer(options, app);
 
-server.listen(443, (err) => {
+server.listen(config.port, (err) => {
     if(err) {
         console.log('error when running the db');
     } else {
-        console.log('running on port 8443');
+        console.log('running on port ' + config.port);
     }
 })
