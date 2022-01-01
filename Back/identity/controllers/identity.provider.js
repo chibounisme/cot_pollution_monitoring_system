@@ -1,5 +1,10 @@
 const IdentityModel = require('../../models/identity.schema');
 const argon2 = require('argon2');
+const jwt = require('jsonwebtoken');
+const config = require('../../main/env.config');
+const fs = require('fs');
+
+fs.readFileSync()
 
 exports.signUp = async (req, res, next) => {
     if (req.body == {} || !(req.body.username && req.body.email && req.body.password && req.body.firstname && req.body.lastname)) {
@@ -54,6 +59,12 @@ exports.list = (req, res) => {
 };
 
 exports.getById = (req, res) => {
+    const token = req.headers['authorization'].split('Bearer ')[1];
+
+    const secretKey = fs.readFileSync(config['key-file']);
+    const x = jwt.verify(token, secretKey);
+    console.log(x);
+
     IdentityModel.findById(req.params.userId)
         .then((result) => {
             res.status(200).send(result);
