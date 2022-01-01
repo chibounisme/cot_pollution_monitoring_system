@@ -8,7 +8,6 @@ exports.routesConfig = function (app) {
     );
 
     app.get('/users/:userId', [
-        passport.authenticate('jwt', { session: false }, () => { }),
         IdentityProvider.getById
     ]);
 };
