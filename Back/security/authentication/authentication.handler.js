@@ -33,13 +33,13 @@ function generateAuthorizationCode(signInId, identity) {
     return authorizationCode;
 }
 
-function generateTokenFor(identity) {
+function generateTokenFor(identity, isRefresh) {
     let token = jwt.sign({
         username: identity.username,
         email: identity.email,
         permissions: identity.permissions,
         id: identity.id
-    }, cert, { algorithm: 'RS512' });
+    }, cert, { algorithm: 'RS512', expiresIn: isRefresh ? '7d' : '1h' });
 
     return token;
 }
@@ -52,7 +52,7 @@ function checkCode(authCode, codeVerifier) {
 
     if (challenges[key]) {
         if (codes[challenges[key]] == authCode) {
-            let token = generateTokenFor(identities[authCode]);
+            let token = generateTokenFor(identities[authCode], false);
 
             delete codes[challenges[key]];
             delete challenges[key];
@@ -65,7 +65,7 @@ function checkCode(authCode, codeVerifier) {
 }
 
 function generateRefreshTokenFor(identity) {
-    return generateTokenFor(identity);
+    return generateTokenFor(identity, true);
 }
 
 exports.preSignIn = async (req, res, next) => {
@@ -149,13 +149,29 @@ exports.postSignIn = async (req, res, next) => {
     });
 };
 
-exports.refreshToken = (req, res) => {
+exports.refreshToken = async (req, res) => {
     try {
-        var now = Math.floor(Date.now() / 1000);
-        req.body.iat = now;
-        req.body.exp = now + config.jwtValidityTimeInSeconds;
-        let token = jwt.sign(req.body, { algorithm: 'RS512' });
-        res.status(201).send({ access_token: token });
+        const token = req.headers['authorization'].split('Bearer ')[1];
+
+        const payload = jwt.verify(token, cert, { algorithms: 'RS512' });
+        if (!payload) {
+            res.status(402).json({
+                message: 'Invalid JWT'
+            });
+            return;
+        }
+
+        let userIdentity = await IdentityModel.Identity.findById(payload.id);
+        if (!result) {
+            res.status(400).send({
+                message: 'there was an error with getting the user data'
+            });
+            return;
+        }
+
+        let accessToken = generateTokenFor(userIdentity, false);
+
+        res.status(201).send({ accessToken });
     } catch (err) {
         res.status(500).send({ errors: err });
     }
