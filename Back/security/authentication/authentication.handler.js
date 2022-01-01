@@ -143,9 +143,19 @@ exports.postSignIn = async (req, res, next) => {
         return;
     }
 
+    const accessTokenPayload = jwt.verify(token, cert, { algorithms: 'RS512' });
+
+    let userIdentity = await IdentityModel.Identity.findById(accessTokenPayload.id);
+    if (!result) {
+        res.status(400).send({
+            message: 'there was an error with getting the user data'
+        });
+        return;
+    }
+
     res.status(200).json({
         accessToken: token,
-        refreshToken: generateRefreshTokenFor(token)
+        refreshToken: generateRefreshTokenFor(userIdentity)
     });
 };
 
@@ -160,7 +170,6 @@ exports.refreshToken = async (req, res) => {
             });
             return;
         }
-        console.log(payload);
 
         let userIdentity = await IdentityModel.Identity.findById(payload.id);
         if (!result) {
@@ -174,7 +183,6 @@ exports.refreshToken = async (req, res) => {
 
         res.status(200).send({ accessToken });
     } catch (err) {
-        console.log(err);
         res.status(500).send({ errors: err });
     }
 };
