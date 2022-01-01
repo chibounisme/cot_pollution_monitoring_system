@@ -6,7 +6,6 @@ const mongoose = require('mongoose'),
     MAX_LOGIN_ATTEMPTS = 5,
     LOCK_TIME = 2 * 60 * 60 * 1000;
 
-//@start Schema
 const identitySchema = new Schema({
     forename: String,
     surname: String,
@@ -36,11 +35,6 @@ identitySchema.virtual('isLocked').get(function() {
     return !!(this.lockUntil && this.lockUntil > Date.now());
 });
 
-/**
- *
- * @param cb
- * @returns {*}
- */
 identitySchema.methods.incLoginAttempts = function(cb) {
     // if we have a previous lock that has expired, restart at 1
     if (this.lockUntil && this.lockUntil < Date.now()) {
@@ -58,24 +52,15 @@ identitySchema.methods.incLoginAttempts = function(cb) {
     return this.updateOne(updates, cb);
 };
 
-/**
- * Grant the permission identified by {@param permission} to the current identity
- * @param permission A number between 0 and 30 inclusive identifying the permission
- */
 identitySchema.methods.grantPermission = (permission) => {
     this.permissions |= (1<<permission);
 };
-/**
- * Revoke the permission identified by {@param permission} to the current identity
- * @param permission A number between 0 and 30 inclusive identifying the permission
- */
+
+
 identitySchema.methods.revokePermission = (permission) => {
     this.permissions &= ~(1<<permission);
 };
-/**
- * Check if the permission identified by {@param permission} is granted to the current identity
- * @param permission A number between 0 and 30 inclusive identifying the permission
- */
+
 identitySchema.methods.hasPermission = (permission) => {
     return (this.permissions & (1<<permission) ) !== 0;
 };
@@ -150,9 +135,4 @@ identitySchema.query.byUsername = function (username) {
     return this.where({ username: new RegExp(username, 'i') } ); // 'i' flag to ignore case
 };
 
-/**
- * Here we compile a model from the schema definition
- * An instance of a model is called a document.
- * Models are responsible for creating and reading documents from the underlying MongoDB database.
- */
 mongoose.model('Identity', identitySchema);
