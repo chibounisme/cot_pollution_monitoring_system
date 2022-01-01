@@ -1,7 +1,6 @@
 const mongoose = require('mongoose'),
     Schema = mongoose.Schema,
     argon2 = require('argon2'),
-    uniqueValidator = require('mongoose-unique-validator'),
     // these values can be whatever you want - we're defaulting to a
     // max of 5 attempts, resulting in a 2 hour lock
     MAX_LOGIN_ATTEMPTS = 5,
@@ -151,7 +150,6 @@ identitySchema.query.byUsername = function (username) {
     return this.where({ username: new RegExp(username, 'i') } ); // 'i' flag to ignore case
 };
 
-identitySchema.plugin(uniqueValidator, {message: 'is already taken.'});
 /**
  * Here we compile a model from the schema definition
  * An instance of a model is called a document.

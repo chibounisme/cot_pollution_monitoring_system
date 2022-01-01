@@ -1,8 +1,7 @@
 #!/usr/bin/env node
 const app = require('./app')
 const config = require('./env.config.js');
-const debug = require('debug')('phoenix:server');
-// config.initRefreshSecret();
+
 const tls = require('spdy'); // enable : http2 + https (http2 over tls)
 const fs = require('fs');
 let helmet = require('helmet');
@@ -15,7 +14,7 @@ const options = {
 
 app.use(helmet());
 
-app.use((req, res, next) => {
+app.use((req, _, next) => {
     if(req.method == 'OPTIONS') {
         // set headers
         req.headers['Access-Control-Allow-Origin'] = '*';

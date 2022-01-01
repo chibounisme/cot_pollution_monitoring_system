@@ -1,18 +1,18 @@
 const IdentityProvider = require('./controllers/identity.provider');
 const AuthorizationPermission = require('../security/authorization/authorization.permission');
 
-const   passport = require('passport'),
-        jwt = require('jsonwebtoken'),
-        { v4: uuidv4 } = require('uuid'),
-        privateKey = fs.readFileSync('./tls/example.lcom-key.pem'),
-        iss = 'urn:example.lcom',
-        aud = 'urn:*.example.lcom',
-        config = require('../main/env.config');
+const passport = require('passport'),
+    jwt = require('jsonwebtoken'),
+    { v4: uuidv4 } = require('uuid'),
+    privateKey = fs.readFileSync('./tls/example.lcom-key.pem'),
+    iss = 'urn:example.lcom',
+    aud = 'urn:*.example.lcom',
+    config = require('../main/env.config');
 
-const   Master = config.permissionLevels.Master,
-        Member = config.permissionLevels.Member,
-        Surfer = config.permissionLevels.Surfer,
-        validityTime = config.jwtValidityTimeInSeconds;
+const Master = config.permissionLevels.Master,
+    Member = config.permissionLevels.Member,
+    Surfer = config.permissionLevels.Surfer,
+    validityTime = config.jwtValidityTimeInSeconds;
 
 exports.routesConfig = function (app) {
     app.post('/users',
@@ -32,13 +32,13 @@ exports.routesConfig = function (app) {
     );
 
     app.get('/users', [
-        passport.authenticate('jwt', { session: false }, ()=>{}),
+        passport.authenticate('jwt', { session: false }, () => { }),
         AuthorizationPermission.minimumPermissionLevelRequired(Member),
         IdentityProvider.list
     ]);
 
     app.get('/users/:userId', [
-        passport.authenticate('jwt', { session: false }, ()=>{}),
+        passport.authenticate('jwt', { session: false }, () => { }),
         AuthorizationPermission.minimumPermissionLevelRequired(Surfer),
         AuthorizationPermission.onlySameUserOrAdminCanDoThisAction,
         IdentityProvider.getById
@@ -52,7 +52,7 @@ exports.routesConfig = function (app) {
      * Thus this is a privileged action done only by administrator
      */
     app.put('/users/:userId', [
-        passport.authenticate('jwt', { session: false }, ()=>{}),
+        passport.authenticate('jwt', { session: false }, () => { }),
         AuthorizationPermission.minimumPermissionLevelRequired(Master),
         AuthorizationPermission.sameUserCantDoThisAction,
         IdentityProvider.putById
@@ -66,23 +66,23 @@ exports.routesConfig = function (app) {
      * Thus only same user or admin can patch without changing identity permission level.
      */
     app.patch('/users/:userId', [
-        passport.authenticate('jwt', { session: false }, ()=>{}),
+        passport.authenticate('jwt', { session: false }, () => { }),
         AuthorizationPermission.minimumPermissionLevelRequired(Surfer),
         AuthorizationPermission.onlySameUserOrAdminCanDoThisAction,
         IdentityProvider.patchById
     ]);
     app.delete('/users/:userId', [
-        passport.authenticate('jwt', { session: false }, ()=>{}),
+        passport.authenticate('jwt', { session: false }, () => { }),
         AuthorizationPermission.minimumPermissionLevelRequired(Master),
         AuthorizationPermission.sameUserCantDoThisAction,
         IdentityProvider.removeById
     ]);
-/*
-    app.post('/authorize', async (req,res,next) => {
-        //TODO add PKCE FLOW
-
-    });
-*/
+    /*
+        app.post('/authorize', async (req,res,next) => {
+            //TODO add PKCE FLOW
+    
+        });
+    */
     app.post('/oauth/token',
         async (req, res, next) => {
             passport.authenticate(
@@ -107,9 +107,9 @@ exports.routesConfig = function (app) {
                                         roles: user.permissionLevel,
                                         jti: uuidv4(),
                                         iat: now,
-                                        exp: now+validityTime
+                                        exp: now + validityTime
                                     };
-                                const token = jwt.sign({ user: body }, privateKey,{ algorithm: 'RS512'});
+                                const token = jwt.sign({ user: body }, privateKey, { algorithm: 'RS512' });
 
                                 return res.json({ token });
                             }
