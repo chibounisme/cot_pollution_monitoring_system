@@ -20,7 +20,7 @@ exports.signUp = async (req, res, next) => {
             }
         });
 
-        let res = await IdentityModel.Identity.find().or([{email: req.body.email}, {username: req.body.username}]);
+        let res = await IdentityModel.Identity.find().or([{ email: { $eq: req.body.email } }, { username: { $eq: req.body.username } }]);
 
         console.log(res)
 
