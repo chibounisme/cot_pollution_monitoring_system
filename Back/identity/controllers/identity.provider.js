@@ -68,12 +68,22 @@ exports.getById = async (req, res) => {
         return;
     }
 
+    if (payload.id != req.params.userId) {
+        res.status(401).send({
+            message: 'Cannot get other people\'s information'
+        });
+        return;
+    }
+
     result = await IdentityModel.Identity.findById(req.params.userId);
     if(!result) {
         res.status(400).send({
             message: 'there was an error with getting the user data'
         });
+        return;
     }
+
+    delete result.password;
 
     res.status(200).send(JSON.stringify(result));
 };

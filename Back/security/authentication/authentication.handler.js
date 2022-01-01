@@ -38,7 +38,7 @@ function generateTokenFor(identity) {
         username: identity.username,
         email: identity.email,
         permissions: identity.permissions,
-        id: identity._id
+        id: identity.id
     }, cert, { algorithm: 'RS512' });
 
     return token;
