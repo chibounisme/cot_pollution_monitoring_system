@@ -39,15 +39,14 @@ function generateTokenFor(identity) {
 }
 
 function checkCode(authCode, codeVerifier) {
-    console.log('creating generator');
     let hmac = crypto.createHmac('SHA256', config['SHA265_secret']);
-    console.log('updating generator with '+ codeVerifier);
     hmac.update(codeVerifier);
-    console.log('getting the hash');
     let sha265String = hmac.digest('hex');
     console.log(sha265String);
     key = Buffer.from(sha265String).toString('base64');
     console.log('key: ' + key);
+
+    printPKCEData();
 
     if (challenges[key]) {
         if (codes[challenges[key]] == authCode) {
@@ -78,6 +77,8 @@ exports.preSignIn = async (req, res, next) => {
         let codeChallenge = decodedTokenData[1];
         
         let signInId =  addChallenge(codeChallenge, clientId);
+
+        printPKCEData();
 
         res.status(200).json({
             signInId
