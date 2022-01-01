@@ -20,7 +20,7 @@ client.on('connect', function () {
 
 client.on('message', async (topic, message) => {
     
-    const mqttData = await MQTTDataModel.saveMQTTData({topic, message});
+    const mqttData = await MQTTDataModel.saveMQTTData({topic, payload: message});
     console.log('Received MQTT Data: ' + mqttData);
 })
 
