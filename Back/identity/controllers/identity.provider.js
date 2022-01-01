@@ -20,7 +20,9 @@ exports.signUp = async (req, res, next) => {
             }
         });
 
-        console.log(existsWithEmailOrUsername)
+        let res = await IdentityModel.Identity.find().or([{email: req.body.email}, {username: req.body.username}]);
+
+        console.log(res)
 
         if (!existsWithEmailOrUsername || existsWithEmailOrUsername == []) {
             return res.status(401).send({
