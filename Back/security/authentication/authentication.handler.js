@@ -54,9 +54,9 @@ exports.preSignIn = async (req, res, next) => {
     // presign token is in the format: base64(clientId:codeChallenge)
     try {
         console.log(req.headers);
-        preAuthorization = req.headers['Pre-Authorization'];
+        preAuthorization = req.headers['pre-authorization'];
         console.log(preAuthorization);
-        
+
         let preAuthorizationHeader = Buffer.from(preAuthorization.split('Bearer ')[1], 'base64');
         let decodedTokenData = preAuthorizationHeader.split(':');
         let clientId = decodedTokenData[0];
