@@ -10,11 +10,14 @@ exports.signUp = async (req, res, next) => {
 
     try {
         let existsWithEmailOrUsername = await IdentityModel.Identity.find({
-            $or: [{
-                email: req.body.email
-            }, {
-                username: req.body.username
-            }]
+            $where: {
+
+                $or: [{
+                    email: req.body.email
+                }, {
+                    username: req.body.username
+                }]
+            }
         });
 
         console.log(existsWithEmailOrUsername)
