@@ -5,7 +5,7 @@ const argon2 = require('argon2');
 const crypto = require('crypto');
 const IdentityModel = require('../../models/identity.schema');
 
-const cert = config['key-file'];
+const cert = fs.readFileSync(config['key-file']);
 
 let challenges = {};
 let codes = {};
@@ -33,6 +33,7 @@ function generateAuthorizationCode(signInId, identity) {
 }
 
 function generateTokenFor(identity) {
+    console.log(identity.toJSON());
     let token = jwt.sign(identity.toJSON(), cert, { algorithm: 'RS512' });
 
     return token;
