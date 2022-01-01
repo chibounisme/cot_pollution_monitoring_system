@@ -119,7 +119,7 @@ exports.signIn = async (req, res, next) => {
 
         if (!passwordMatch) {
             res.status(401).json({
-                message: 'Wrong password'
+                message: 'Wrong user/password combination'
             });
             return;
         }
