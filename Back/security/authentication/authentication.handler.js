@@ -11,6 +11,12 @@ let challenges = {};
 let codes = {};
 let identities = {};
 
+function printPKCEData() {
+    console.log('challenges: ' + challenges);
+    console.log('codes: ' + codes);
+    console.log('identities: ' + identities);
+}
+
 function addChallenge(codechallenge, clientId) {
     let signInId = clientId + "#" + uuidv4().toString();
     challenges[codechallenge] = signInId;
@@ -66,6 +72,8 @@ exports.preSignIn = async (req, res, next) => {
         let signInId =  addChallenge(codeChallenge, clientId);
         console.log('signInId: ' + signInId);
 
+        printPKCEData();
+
         res.status(200).json({
             signInId
         });
@@ -98,7 +106,7 @@ exports.signIn = async (req, res, next) => {
             return;
         }
 
-        let passwordMatch = await argon2.verify(userIdentity.password, req.body.password)
+        let passwordMatch = await argon2.verify(userIdentity.password, req.body.password);
 
         if (!passwordMatch) {
             res.status(401).json({
@@ -109,6 +117,8 @@ exports.signIn = async (req, res, next) => {
 
         let authCode =  generateAuthorizationCode(signInId, userIdentity);
         console.log('authCode: ' + authCode);
+
+        printPKCEData();
 
         res.status(201).send({ authCode });
     } catch (err) {
