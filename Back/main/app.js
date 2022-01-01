@@ -13,6 +13,9 @@ require('./connection.pools')();
 require('../identity/models/identity.schema');
 require('../identity/controllers/iam.provider');
 
+//connect to MQTT Broker
+require('./mqtt.client');
+
 const SecurityRouter = require('../security/routes.config');
 const IdentityRouter = require('../identity/routes.config');
 const indexRouter  = require('../welcome/routes.config');
