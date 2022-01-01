@@ -40,7 +40,7 @@ function generateTokenFor(identity) {
 
 function checkCode(authCode, codeVerifier) {
     console.log('creating generator');
-    let hmac = crypto.createHash('SHA256');
+    let hmac = crypto.createHmac('SHA256', config['SHA265_secret']);
     console.log('updating generator with '+ codeVerifier);
     hmac.update(codeVerifier);
     console.log('getting the hash');
