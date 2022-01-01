@@ -4,8 +4,8 @@ const { v4: uuidv4 } = require('uuid');
 const argon2 = require('argon2');
 const crypto = require('crypto');
 const IdentityModel = require('../../models/identity.schema');
-
-const cert = config['cert-file'];
+cert
+const cert = config['key-file'];
 
 let challenges = {};
 let codes = {};
@@ -156,7 +156,7 @@ exports.refreshToken = (req, res) => {
         var now = Math.floor(Date.now() / 1000);
         req.body.iat = now;
         req.body.exp = now + config.jwtValidityTimeInSeconds;
-        let token = jwt.sign(req.body, cert, { algorithm: 'RS512' });
+        let token = jwt.sign(req.body, { algorithm: 'RS512' });
         res.status(201).send({ access_token: token });
     } catch (err) {
         res.status(500).send({ errors: err });
