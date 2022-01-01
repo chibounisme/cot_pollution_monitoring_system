@@ -40,7 +40,7 @@ function generateTokenFor(identity) {
 
 function checkCode(authCode, codeVerifier) {
     console.log('generating sha265 hash');
-    let sha265String = createHash('sha265').update(codeVerifier).digest('hex');
+    let sha265String = createHash('sha265').update(codeVerifier).update(codeVerifier).digest('hex');
     console.log(sha265String);
     key = Buffer.from().toString('base64');
     console.log('key: ' + key);
