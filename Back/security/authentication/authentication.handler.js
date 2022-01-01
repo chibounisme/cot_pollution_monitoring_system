@@ -37,7 +37,8 @@ function generateTokenFor(identity) {
     let token = jwt.sign({
         username: identity.username,
         email: identity.email,
-        permissions: identity.permissions
+        permissions: identity.permissions,
+        id: identity._id
     }, cert, { algorithm: 'RS512' });
 
     return token;
@@ -122,7 +123,7 @@ exports.signIn = async (req, res, next) => {
 
         let authCode = generateAuthorizationCode(signInId, userIdentity);
 
-        res.status(201).send({ authCode, userId: userIdentity.id });
+        res.status(201).send({ authCode });
     } catch (err) {
         return next(err);
     }

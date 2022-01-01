@@ -69,5 +69,11 @@ exports.getById = async (req, res) => {
     }
 
     result = await IdentityModel.Identity.findById(req.params.userId);
+    if(!result) {
+        res.status(400).send({
+            message: 'there was an error with getting the user data'
+        });
+    }
+
     res.status(200).send(JSON.stringify(result));
 };
