@@ -2,7 +2,7 @@ const IdentityModel = require('../../models/identity.schema');
 const argon2 = require('argon2');
 
 exports.signUp = async (req, res, next) => {
-    if (req.body == {} || !(req.body.username && req.body.email && req.body.password)) {
+    if (req.body == {} || !(req.body.username && req.body.email && req.body.password && req.body.firstname && req.body.lastname)) {
         res.status(400).send({
             message: 'Missing required fields'
         });

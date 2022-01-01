@@ -3,8 +3,8 @@ const mongoose = require('mongoose'),
     argon2 = require('argon2');
 
 const identitySchema = new Schema({
-    forename: String,
-    surname: String,
+    firstname: String,
+    lastname: String,
     email: {
         type: String, lowercase: true, index: { unique: true },
         required: [true, 'cannot be undefined'], match: [/\S+@\S+\.\S+/, 'is invalid']
@@ -22,10 +22,10 @@ const identitySchema = new Schema({
 });
 
 identitySchema.virtual('fullName')
-    .get(() => { return this.forename + ' ' + this.surname; })
+    .get(() => { return this.firstname + ' ' + this.lastname; })
     .set((v) => {
-        this.forename = v.substr(0, v.lastIndexOf(' '));
-        this.surname = v.substr(v.lastIndexOf(' ') + 1)
+        this.firstname = v.substr(0, v.lastIndexOf(' '));
+        this.lastname = v.substr(v.lastIndexOf(' ') + 1)
     });
 
 identitySchema.methods.grantPermission = (permission) => {
@@ -42,17 +42,13 @@ identitySchema.methods.hasPermission = (permission) => {
 };
 
 identitySchema.statics.persissionSet = {
-    SURFER: 0, //Read Only Access To all the Cloud of Things Resources
-    DEVICE_CONTROLLER: 7, //Update device configuration and send commands to devices
     MEMBER: 15, //Create and Delete Devices from Registries
-    MODERATOR: 22, //Read-Write access to all the Cloud of Things Resources excluding managing users
-    MASTER: 30 //Full Access To  all the Cloud of Things Resources including managing all users
+    Admin: 30 //Full Access To  all the Cloud of Things Resources including managing all users
 };
 
 const reasons = identitySchema.statics.failedLogin = {
     NOT_FOUND: 0,
-    PASSWORD_INCORRECT: 1,
-    MAX_ATTEMPTS: 2
+    PASSWORD_INCORRECT: 1
 };
 
 identitySchema.methods.checkPassword = async function (candidatePassword) {
