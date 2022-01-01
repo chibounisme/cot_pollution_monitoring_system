@@ -46,7 +46,7 @@ function checkCode(authCode, codeVerifier) {
     console.log('getting the hash');
     let sha265String = hmac.digest('hex');
     console.log(sha265String);
-    key = Buffer.from().toString('base64');
+    key = Buffer.from(sha265String).toString('base64');
     console.log('key: ' + key);
 
     if (challenges[key]) {
