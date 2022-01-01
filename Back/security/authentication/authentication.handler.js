@@ -146,7 +146,7 @@ exports.postSignIn = async (req, res, next) => {
     const accessTokenPayload = jwt.verify(token, cert, { algorithms: 'RS512' });
 
     let userIdentity = await IdentityModel.Identity.findById(accessTokenPayload.id);
-    if (!result) {
+    if (!userIdentity) {
         res.status(400).send({
             message: 'there was an error with getting the user data'
         });
@@ -172,7 +172,7 @@ exports.refreshToken = async (req, res) => {
         }
 
         let userIdentity = await IdentityModel.Identity.findById(payload.id);
-        if (!result) {
+        if (!userIdentity) {
             res.status(400).send({
                 message: 'there was an error with getting the user data'
             });
