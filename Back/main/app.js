@@ -26,7 +26,9 @@ IdentityRouter.routesConfig(app);
 
 //add error middleware
 app.use(function (err, req, res, next) {
-    res.status(500).json({ error: err.stack });
+    if (err) {
+        res.status(500).json({ error: err.stack });
+    }
 });
 
 // Export the express application
