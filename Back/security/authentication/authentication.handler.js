@@ -39,6 +39,7 @@ function generateTokenFor(identity) {
 }
 
 function checkCode(authCode, codeVerifier) {
+    console.log('generating sha265 hash');
     key = Buffer.from(createHash('sha265').update(codeVerifier).digest('hex')).toString('base64');
     console.log('key: ' + key);
 
@@ -69,14 +70,8 @@ exports.preSignIn = async (req, res, next) => {
         let decodedTokenData = preAuthorizationHeader.split(':');
         let clientId = decodedTokenData[0];
         let codeChallenge = decodedTokenData[1];
-
-        console.log('clientId: ' + clientId);
-        console.log('codeChallenge: ' + codeChallenge);
         
         let signInId =  addChallenge(codeChallenge, clientId);
-        console.log('signInId: ' + signInId);
-
-        printPKCEData();
 
         res.status(200).json({
             signInId
@@ -110,8 +105,6 @@ exports.signIn = async (req, res, next) => {
             return;
         }
 
-        console.log(userIdentity);
-
         let passwordMatch = await argon2.verify(userIdentity.password, req.body.password);
 
         if (!passwordMatch) {
@@ -122,9 +115,6 @@ exports.signIn = async (req, res, next) => {
         }
 
         let authCode =  generateAuthorizationCode(signInId, userIdentity);
-        console.log('authCode: ' + authCode);
-
-        printPKCEData();
 
         res.status(201).send({ authCode });
     } catch (err) {
@@ -137,6 +127,8 @@ exports.postSignIn = async (req, res) => {
     let decodedTokenData = postAuthorizationHeader.split(':');
     let authCode = decodedTokenData[0];
     let codeVerifier = decodedTokenData[1];
+    console.log('authCode: ' + authCode);
+    console.log('codeVerifier: ' + codeVerifier);
 
     let token = checkCode(authCode, codeVerifier);
     if (!token) {
