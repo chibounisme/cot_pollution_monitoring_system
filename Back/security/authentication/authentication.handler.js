@@ -33,27 +33,22 @@ function generateAuthorizationCode(signInId, identity) {
 }
 
 function generateTokenFor(identity) {
-    let token = jwt.sign(identity, cert, { algorithm: 'RS512' });
+    let token = jwt.sign(identity.toJSON(), cert, { algorithm: 'RS512' });
 
     return token;
 }
 
 function checkCode(authCode, codeVerifier) {
     let hmac = crypto.createHmac('SHA256', config['SHA265_secret']);
-    hmac.update(codeVerifier);
     let sha265String = hmac.digest('hex');
-    console.log(sha265String);
     key = Buffer.from(sha265String).toString('base64');
-    console.log('key: ' + key);
-
-    printPKCEData();
 
     if (challenges[key]) {
         if (codes[challenges[key]] == authCode) {
+            let token = generateTokenFor(identities[authCode]);
+            
             delete codes[challenges[key]];
             delete challenges[key];
-
-            let token = generateTokenFor(identities[authCode]);
             delete identities[authCode];
             return token;
         }
