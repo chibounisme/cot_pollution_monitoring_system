@@ -9,6 +9,16 @@ exports.signUp = async (req, res, next) => {
     }
 
     try {
+        let existsWithEmailOrUsername = await IdentityModel.Identity.findOne({
+            $or: [{
+                email: req.body.email
+            }, {
+                username: req.body.username
+            }]
+        });
+
+        console.log(existsWithEmailOrUsername);
+
         req.body.password = await argon2.hash(req.body.password, {
             type: argon2.argon2id,
             memoryCost: 2 ** 16,
@@ -19,8 +29,8 @@ exports.signUp = async (req, res, next) => {
         });
 
         if (!req.body.permissions)
-            req.body.permissions = 0; 
-        
+            req.body.permissions = 0;
+
         const saved = await IdentityModel.createIdentity(req.body);
         res.status(201).send({ id: saved._id });
     } catch (err) {

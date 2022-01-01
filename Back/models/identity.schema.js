@@ -86,6 +86,8 @@ identitySchema.query.byUsername = function (username) {
 
 const Identity = mongoose.model('Identity', identitySchema);
 
+exports.Identity = Identity;
+
 exports.findByUsername = (username) => {
     Identity.findOne().byUsername(username).exec((err, identity) => {
         if (err) {
