@@ -56,7 +56,6 @@ exports.preSignIn = async (req, res, next) => {
         preAuthorization = req.headers['pre-authorization'];
 
         let preAuthorizationHeader = Buffer.from(preAuthorization.split('Bearer ')[1], 'base64').toString();
-        console.log(preAuthorizationHeader);
         let decodedTokenData = preAuthorizationHeader.split(':');
         let clientId = decodedTokenData[0];
         let codeChallenge = decodedTokenData[1];
@@ -65,7 +64,7 @@ exports.preSignIn = async (req, res, next) => {
         console.log('codeChallenge: ' + codeChallenge);
         
         let signInId =  addChallenge(codeChallenge, clientId);
-        console.log('signInId: ' + codeChalsignInIdlenge);
+        console.log('signInId: ' + signInId);
 
         res.status(200).json({
             signInId
