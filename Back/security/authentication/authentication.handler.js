@@ -51,7 +51,9 @@ function checkCode(authCode, codeVerifier) {
     let hmac = crypto.createHmac('SHA256', config['SHA265_secret']);
     hmac.update(codeVerifier);
     let sha256String = hmacsha256(codeVerifier, config['SHA265_secret']);
+    console.log('sha256 before base64: ' + sha256String);
     key = Buffer.from(sha256String).toString('base64');
+    console.log('sha256 is: ', key);
 
     if (challenges[key]) {
         if (codes[challenges[key]] == authCode) {
