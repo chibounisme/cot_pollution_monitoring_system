@@ -40,7 +40,9 @@ function generateTokenFor(identity) {
 
 function checkCode(authCode, codeVerifier) {
     console.log('generating sha265 hash');
-    key = Buffer.from(createHash('sha265').update(codeVerifier).digest('hex')).toString('base64');
+    let sha265String = createHash('sha265').update(codeVerifier).digest('hex');
+    console.log(sha265String);
+    key = Buffer.from().toString('base64');
     console.log('key: ' + key);
 
     if (challenges[key]) {
@@ -122,7 +124,11 @@ exports.signIn = async (req, res, next) => {
     }
 };
 
-exports.postSignIn = async (req, res) => {
+exports.postSignIn = async (req, res, next) => {
+    console.log('I am here');
+    console.log(req.headers);
+    console.log(req.headers['post-authorization']);
+
     let postAuthorizationHeader = Buffer.from(req.headers['post-authorization'].split('Bearer ')[1], 'base64').toString();
     let decodedTokenData = postAuthorizationHeader.split(':');
     let authCode = decodedTokenData[0];
