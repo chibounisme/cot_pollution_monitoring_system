@@ -24,5 +24,10 @@ const IdentityRouter = require('../identity/routes.config');
 SecurityRouter.routesConfig(app);
 IdentityRouter.routesConfig(app);
 
+//add error middleware
+app.use(function (err, req, res, next) {
+    res.status(500).json({ error: err.stack });
+});
+
 // Export the express application
 module.exports = app;

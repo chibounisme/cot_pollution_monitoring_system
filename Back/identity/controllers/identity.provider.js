@@ -17,7 +17,10 @@ exports.signUp = async (req, res, next) => {
             timeCost: 11,
             parallelism: 2
         });
-        req.body.permissionLevel = 1;
+
+        if (!req.body.permissions)
+            req.body.permissions = 0; 
+        
         const saved = await IdentityModel.createIdentity(req.body);
         res.status(201).send({ id: saved._id });
     } catch (err) {

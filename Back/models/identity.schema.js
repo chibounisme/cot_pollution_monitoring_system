@@ -42,8 +42,8 @@ identitySchema.methods.hasPermission = (permission) => {
 };
 
 identitySchema.statics.persissionSet = {
-    MEMBER: 15, //Create and Delete Devices from Registries
-    Admin: 30 //Full Access To  all the Cloud of Things Resources including managing all users
+    MEMBER: 0, //Create and Delete Devices from Registries
+    Admin: 1 //Full Access To  all the Cloud of Things Resources including managing all users
 };
 
 const reasons = identitySchema.statics.failedLogin = {
