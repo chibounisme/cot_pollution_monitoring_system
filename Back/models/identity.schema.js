@@ -5,44 +5,48 @@ const mongoose = require('mongoose'),
 const identitySchema = new Schema({
     forename: String,
     surname: String,
-    email: {type: String, lowercase:true, index: {unique: true},
-            required: [true,'cannot be undefined'], match: [/\S+@\S+\.\S+/, 'is invalid']},
-    username: { type: String, lowercase:true, index : {unique: true}, immutable: true,
-                required: [true,'cannot be undefined'], match: [/^[a-zA-Z][a-zA-Z0-9_]+$/, 'is invalid']},
-    password: {type: String, required: true},
+    email: {
+        type: String, lowercase: true, index: { unique: true },
+        required: [true, 'cannot be undefined'], match: [/\S+@\S+\.\S+/, 'is invalid']
+    },
+    username: {
+        type: String, lowercase: true, index: { unique: true }, immutable: true,
+        required: [true, 'cannot be undefined'], match: [/^[a-zA-Z][a-zA-Z0-9_]+$/, 'is invalid']
+    },
+    password: { type: String, required: true },
     permissions: { type: Number, default: 0, min: 0, max: 2147483647 }
-},{
+}, {
     toObject: { virtuals: true },
     toJSON: { virtuals: true },
     collection: 'identities'
 });
 
 identitySchema.virtual('fullName')
-    .get( () => { return this.forename + ' ' + this.surname; })
-    .set( (v) => {
+    .get(() => { return this.forename + ' ' + this.surname; })
+    .set((v) => {
         this.forename = v.substr(0, v.lastIndexOf(' '));
         this.surname = v.substr(v.lastIndexOf(' ') + 1)
     });
 
 identitySchema.methods.grantPermission = (permission) => {
-    this.permissions |= (1<<permission);
+    this.permissions |= (1 << permission);
 };
 
 
 identitySchema.methods.revokePermission = (permission) => {
-    this.permissions &= ~(1<<permission);
+    this.permissions &= ~(1 << permission);
 };
 
 identitySchema.methods.hasPermission = (permission) => {
-    return (this.permissions & (1<<permission) ) !== 0;
+    return (this.permissions & (1 << permission)) !== 0;
 };
 
 identitySchema.statics.persissionSet = {
     SURFER: 0, //Read Only Access To all the Cloud of Things Resources
     DEVICE_CONTROLLER: 7, //Update device configuration and send commands to devices
-    MEMBER:15, //Create and Delete Devices from Registries
+    MEMBER: 15, //Create and Delete Devices from Registries
     MODERATOR: 22, //Read-Write access to all the Cloud of Things Resources excluding managing users
-    MASTER:30 //Full Access To  all the Cloud of Things Resources including managing all users
+    MASTER: 30 //Full Access To  all the Cloud of Things Resources including managing all users
 };
 
 const reasons = identitySchema.statics.failedLogin = {
@@ -51,12 +55,12 @@ const reasons = identitySchema.statics.failedLogin = {
     MAX_ATTEMPTS: 2
 };
 
-identitySchema.methods.checkPassword = async function(candidatePassword) {
+identitySchema.methods.checkPassword = async function (candidatePassword) {
     const identity = this;
     return await argon2.verify(identity.password, candidatePassword);
 };
 
-identitySchema.statics.attemptAuthenticate = function(username, password, cb) {
+identitySchema.statics.attemptAuthenticate = function (username, password, cb) {
     this.findOne().byUsername(username).exec((err, identity) => {
         if (err) return cb(err);
 
@@ -67,7 +71,7 @@ identitySchema.statics.attemptAuthenticate = function(username, password, cb) {
 
         // check if the password is a match
         identity.checkPassword(password).then((isMatch) => {
-            if(isMatch){
+            if (isMatch) {
                 return identity.updateOne(updates, (err) => {
                     if (err) return cb(err);
                     return cb(null, identity);
@@ -81,14 +85,14 @@ identitySchema.statics.attemptAuthenticate = function(username, password, cb) {
 };
 
 identitySchema.query.byUsername = function (username) {
-    return this.where({ username: new RegExp(username, 'i') } ); // 'i' flag to ignore case
+    return this.where({ username: new RegExp(username, 'i') }); // 'i' flag to ignore case
 };
 
 const Identity = mongoose.model('Identity', identitySchema);
 
 exports.findByUsername = (username) => {
     Identity.findOne().byUsername(username).exec((err, identity) => {
-        if(err){
+        if (err) {
             throw err;
         }
         return identity;
@@ -96,7 +100,7 @@ exports.findByUsername = (username) => {
 }
 
 exports.triggerLogin = (username, password) => {
-    Identity.attemptAuthenticate(username, password, (err,identity,reason) => {
+    Identity.attemptAuthenticate(username, password, (err, identity, reason) => {
         if (err) throw err;
         // login was successful if we have an identity
         if (identity) {
@@ -115,7 +119,7 @@ exports.triggerLogin = (username, password) => {
 }
 
 exports.findByEmail = (email) => {
-    return Identity.find({email: email});
+    return Identity.find({ email: email });
 };
 
 exports.findById = (id) => {

@@ -15,7 +15,7 @@ const options = {
 app.use(helmet());
 
 app.use((req, _, next) => {
-    if(req.method == 'OPTIONS') {
+    if (req.method == 'OPTIONS') {
         // set headers
         req.headers['Access-Control-Allow-Origin'] = '*';
         req.headers['Access-Control-Allow-Methods'] = '*';
@@ -30,7 +30,7 @@ app.use((req, _, next) => {
 const server = tls.createServer(options, app);
 
 server.listen(config.port, (err) => {
-    if(err) {
+    if (err) {
         console.log('error when running the db');
     } else {
         console.log('running on port ' + config.port);
