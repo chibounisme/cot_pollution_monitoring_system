@@ -171,8 +171,9 @@ exports.refreshToken = async (req, res) => {
 
         let accessToken = generateTokenFor(userIdentity, false);
 
-        res.status(201).send({ accessToken });
+        res.status(200).send({ accessToken });
     } catch (err) {
+        console.log(err);
         res.status(500).send({ errors: err });
     }
 };
