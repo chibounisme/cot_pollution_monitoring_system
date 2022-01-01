@@ -12,7 +12,10 @@ app.get('/', (req, res) => {
 
 //connect to all databases
 require('./connection.pools')();
+
+//initialize schemas
 require('../models/identity.schema');
+require('../models/mqttPayload.schema');
 
 //connect to MQTT Broker
 require('./mqtt.client');

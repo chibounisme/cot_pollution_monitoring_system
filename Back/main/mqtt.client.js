@@ -1,5 +1,6 @@
 const mqtt = require('mqtt');
 const config = require('./env.config.js');
+const MQTTDataModel = require('../models/mqttData.schema');
 
 const client = mqtt.connect(config.mqtt_host, {
     username: config.mqtt_user,
@@ -17,8 +18,9 @@ client.on('connect', function () {
     })
 })
 
-client.on('message', (topic, message) => {
-    console.log('got message from topic: ' + topic);
-    console.log('the message is: ' + message);
+client.on('message', async (topic, message) => {
+    
+    const mqttData = await MQTTDataModel.saveMQTTData({topic, message});
+    console.log('Received MQTT Data: ' + mqttData);
 })
 
