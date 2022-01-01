@@ -12,9 +12,9 @@ let codes = {};
 let identities = {};
 
 function printPKCEData() {
-    console.log('challenges: ' + challenges);
-    console.log('codes: ' + codes);
-    console.log('identities: ' + identities);
+    console.log('challenges: ' + JSON.stringify(challenges, null, 2));
+    console.log('codes: ' + SON.stringify(codes, null, 2));
+    console.log('identities: ' + SON.stringify(identities, null, 2));
 }
 
 function addChallenge(codechallenge, clientId) {
@@ -93,7 +93,7 @@ exports.signIn = async (req, res, next) => {
             return;
         }
 
-        let userIdentity = IdentityModel.Identity.findOne({
+        let userIdentity = await IdentityModel.Identity.findOne({
             where: {
                 username: req.body.username
             }
@@ -105,6 +105,8 @@ exports.signIn = async (req, res, next) => {
             });
             return;
         }
+
+        console.log(userIdentity);
 
         let passwordMatch = await argon2.verify(userIdentity.password, req.body.password);
 
