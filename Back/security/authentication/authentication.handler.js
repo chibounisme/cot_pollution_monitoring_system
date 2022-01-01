@@ -58,8 +58,14 @@ exports.preSignIn = async (req, res, next) => {
         let clientId = decodedTokenData[0];
         let codeChallenge = decodedTokenData[1];
 
+        console.log('clientId: ' + clientId);
+        console.log('codeChallenge: ' + codeChallenge);
+        
+        let signInId =  addChallenge(codeChallenge, clientId);
+        console.log('signInId: ' + codeChalsignInIdlenge);
+
         res.status(200).json({
-            signInId: addChallenge(codeChallenge, clientId)
+            signInId
         });
     } catch (err) {
         next(err);
@@ -99,7 +105,10 @@ exports.signIn = async (req, res, next) => {
             return;
         }
 
-        res.status(201).send({ authCode: generateAuthorizationCode(signInId, userIdentity) });
+        let authCode =  generateAuthorizationCode(signInId, userIdentity);
+        console.log('authCode: ' + authCode);
+
+        res.status(201).send({ authCode });
     } catch (err) {
         return next(err);
     }
