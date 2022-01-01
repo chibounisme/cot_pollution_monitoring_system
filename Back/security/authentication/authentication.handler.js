@@ -44,6 +44,8 @@ function generateTokenFor(identity) {
 }
 
 function checkCode(authCode, codeVerifier) {
+    console.log('authCode: ' + authCode);
+    console.log('codeVerifier: ' + codeVerifier);
     let hmac = crypto.createHmac('SHA256', config['SHA265_secret']);
     hmac.update(codeVerifier);
     let sha265String = hmac.digest('hex');
