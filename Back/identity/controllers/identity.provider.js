@@ -3,31 +3,22 @@ const argon2 = require('argon2');
 
 exports.signUp = async (req, res, next) => {
     if (req.body == {} || !(req.body.username && req.body.email && req.body.password && req.body.firstname && req.body.lastname)) {
-        return res.status(400).send({
+        res.status(400).send({
             message: 'Missing required fields'
         });
+        return;
     }
 
     try {
-        let existsWithEmailOrUsername = await IdentityModel.Identity.find({
-            where: {
-
-                $or: [{
-                    email: req.body.email
-                }, {
-                    username: req.body.username
-                }]
-            }
-        });
-
-        let res = await IdentityModel.Identity.find().or([{ email: { $eq: req.body.email } }, { username: { $eq: req.body.username } }]);
+        let existsWithEmailOrUsername = await IdentityModel.Identity.find().or([{ email: { $eq: req.body.email } }, { username: { $eq: req.body.username } }]);
 
         console.log(res)
 
         if (!existsWithEmailOrUsername || existsWithEmailOrUsername == []) {
-            return res.status(401).send({
+            res.status(401).send({
                 message: 'User with email or username already exists!'
             });
+            return;
         }
 
         req.body.password = await argon2.hash(req.body.password, {
