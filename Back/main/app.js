@@ -15,7 +15,7 @@ require('./connection.pools')();
 
 //initialize schemas
 require('../models/identity.schema');
-require('../models/mqttPayload.schema');
+require('../models/mqttData.schema');
 
 //connect to MQTT Broker
 require('./mqtt.client');
