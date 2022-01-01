@@ -45,6 +45,7 @@ export class AuthService {
   }
 
   preSignIn() {
+    console.log(this.codeChallenge);
     this.preAuthorization = 'Bearer ' + btoa(this.clientId + ':' + this.codeChallenge);
 
     // eslint-disable-next-line @typescript-eslint/naming-convention

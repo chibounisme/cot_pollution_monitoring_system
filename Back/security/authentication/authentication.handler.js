@@ -6,6 +6,9 @@ const crypto = require('crypto');
 const fs = require('fs');
 const IdentityModel = require('../../models/identity.schema');
 
+import hmacsha256 from 'crypto-js/hmac-sha256.js';
+import Base64 from 'crypto-js/enc-base64.js';
+
 const cert = fs.readFileSync(config['key-file']);
 
 let challenges = {};
@@ -47,7 +50,7 @@ function generateTokenFor(identity, isRefresh) {
 function checkCode(authCode, codeVerifier) {
     let hmac = crypto.createHmac('SHA256', config['SHA265_secret']);
     hmac.update(codeVerifier);
-    let sha256String = hmac.digest('hex');
+    let sha256String = hmacsha256(codeVerifier, config['SHA265_secret']);
     key = Buffer.from(sha256String).toString('base64');
 
     if (challenges[key]) {
