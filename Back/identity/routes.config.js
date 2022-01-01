@@ -1,18 +1,7 @@
 const IdentityProvider = require('./controllers/identity.provider');
 const AuthorizationPermission = require('../security/authorization/authorization.permission');
 
-const passport = require('passport'),
-    jwt = require('jsonwebtoken'),
-    { v4: uuidv4 } = require('uuid'),
-    privateKey = fs.readFileSync('/etc/letsencrypt/live/pmscot.me/privkey.pem'),
-    iss = 'urn:pmscot.me',
-    aud = 'urn:*.pmscot.me',
-    config = require('../main/env.config');
-
-const Master = config.permissionLevels.Master,
-    Member = config.permissionLevels.Member,
-    Surfer = config.permissionLevels.Surfer,
-    validityTime = config.jwtValidityTimeInSeconds;
+const passport = require('passport');
 
 exports.routesConfig = function (app) {
     app.post('/users',
@@ -44,81 +33,4 @@ exports.routesConfig = function (app) {
         IdentityProvider.getById
     ]);
 
-    /**
-     * In a PUT request, the enclosed entity is considered to be
-     * a modified version of the resource stored on the origin server,
-     * and the client is requesting that the stored version be replaced.
-     * So all the attributes are to be updated!
-     * Thus this is a privileged action done only by administrator
-     */
-    app.put('/users/:userId', [
-        passport.authenticate('jwt', { session: false }, () => { }),
-        AuthorizationPermission.minimumPermissionLevelRequired(Master),
-        AuthorizationPermission.sameUserCantDoThisAction,
-        IdentityProvider.putById
-    ]);
-
-    /**
-     * PATCH specifies that the enclosed entity contains a set of instructions describing
-     * how a resource currently residing on the origin server should be modified to produce a new version.
-     * So, some attributes could or should remain unchanged.
-     * In our case, a regular user cannot change permissionLevel!
-     * Thus only same user or admin can patch without changing identity permission level.
-     */
-    app.patch('/users/:userId', [
-        passport.authenticate('jwt', { session: false }, () => { }),
-        AuthorizationPermission.minimumPermissionLevelRequired(Surfer),
-        AuthorizationPermission.onlySameUserOrAdminCanDoThisAction,
-        IdentityProvider.patchById
-    ]);
-    app.delete('/users/:userId', [
-        passport.authenticate('jwt', { session: false }, () => { }),
-        AuthorizationPermission.minimumPermissionLevelRequired(Master),
-        AuthorizationPermission.sameUserCantDoThisAction,
-        IdentityProvider.removeById
-    ]);
-    /*
-        app.post('/authorize', async (req,res,next) => {
-            //TODO add PKCE FLOW
-    
-        });
-    */
-    app.post('/oauth/token',
-        async (req, res, next) => {
-            passport.authenticate(
-                'signIn',
-                async (err, user, info) => {
-                    try {
-                        if (err || !user) {
-                            return next(err);
-                        }
-                        req.login(
-                            user,
-                            { session: false },
-                            async (error) => {
-                                if (error) return next(error);
-                                const now = Math.floor(Date.now() / 1000),
-                                    body = {
-                                        iss: iss,
-                                        aud: aud,
-                                        sub: user.username,
-                                        name: user.fullName,
-                                        userId: user._id,
-                                        roles: user.permissionLevel,
-                                        jti: uuidv4(),
-                                        iat: now,
-                                        exp: now + validityTime
-                                    };
-                                const token = jwt.sign({ user: body }, privateKey, { algorithm: 'RS512' });
-
-                                return res.json({ token });
-                            }
-                        );
-                    } catch (error) {
-                        return next(error);
-                    }
-                }
-            )(req, res, next);
-        }
-    );
 };

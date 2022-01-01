@@ -1,24 +1,24 @@
-const   passport = require('passport'),
-        LocalStrategy = require('passport-local').Strategy,
-        JWTStrategy = require('passport-jwt').Strategy,
-        ExtractJWT = require('passport-jwt').ExtractJwt,
-        IdentityModel = require('../models/identity.model'),
-        fs = require('fs'),
-        pubKey = fs.readFileSync('/etc/letsencrypt/live/pmscot.me/privkey.pem'),
-        iss = 'urn:pmscot.me',
-        aud = 'urn:*.pmscot.me';
+const passport = require('passport'),
+    LocalStrategy = require('passport-local').Strategy,
+    JWTStrategy = require('passport-jwt').Strategy,
+    ExtractJWT = require('passport-jwt').ExtractJwt,
+    IdentityModel = require('../models/identity.model'),
+    fs = require('fs'),
+    pubKey = fs.readFileSync('/etc/letsencrypt/live/pmscot.me/privkey.pem'),
+    iss = 'urn:pmscot.me',
+    aud = 'urn:*.pmscot.me';
 
 passport.use('signUp',
     new LocalStrategy(
         {
-            usernameField : 'username',
-            passwordField : 'password',
-            passReqToCallback : true
+            usernameField: 'username',
+            passwordField: 'password',
+            passReqToCallback: true
         },
         async (req, username, password, done) => {
             // check if there
             try {
-                let identity = IdentityModel.findByUsername({username: username});
+                let identity = IdentityModel.findByUsername({ username: username });
 
                 // check to see if there is already an identity with that email
                 if (identity) {
@@ -31,7 +31,7 @@ passport.use('signUp',
                     console.log("Hello!");
                     return done(null, saved);
                 }
-            }catch (e) {
+            } catch (e) {
                 return done(e);
             }
         }
@@ -46,7 +46,7 @@ passport.use('signIn',
         },
         async (username, password, done) => {
             try {
-                return done(null,IdentityModel.triggerLogin(username,password));
+                return done(null, IdentityModel.triggerLogin(username, password));
             } catch (error) {
                 return done(error);
             }
@@ -64,7 +64,7 @@ passport.use(
             jwtFromRequest: ExtractJWT.fromAuthHeaderAsBearerToken()
         },
         async (token, done) => {
-            IdentityModel.findByUsername(token.sub, function(err, identity) {
+            IdentityModel.findByUsername(token.sub, function (err, identity) {
                 if (err) {
                     return done(err, false);
                 }

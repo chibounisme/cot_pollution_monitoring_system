@@ -31,12 +31,3 @@ exports.refresh_token = (req, res) => {
         res.status(500).send({errors: err});
     }
 };
-
-exports.resetRefreshSecret = (req, res) => {
-    try {
-        config.initRefreshSecret();
-        res.status(204).send({});
-    }catch (err) {
-        res.status(500).send({errors: err});
-    }
-};
