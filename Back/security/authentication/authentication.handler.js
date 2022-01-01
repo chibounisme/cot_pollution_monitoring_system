@@ -1,29 +1,128 @@
 const config = require('../../main/env.config.js');
 const jwt = require('jsonwebtoken');
-const crypto = require('crypto');
+const { v4: uuidv4 } = require('uuid');
+const argon2 = require('argon2');
+const { createHash } = require('crypto');
+const IdentityModel = require('../../models/identity.schema');
 
 const cert = config['cert-file'];
 
-exports.preSignIn = (req, res) => {
+let challenges = {};
+let codes = {};
+let identities = {};
 
+function addChallenge(codechallenge, clientId) {
+    let signInId = clientId + "#" + uuidv4().toString();
+    challenges[codechallenge] = signInId;
+
+    return signInId;
+}
+
+function generateAuthorizationCode(signInId, identity) {
+    let authorizationCode = uuidv4().toString();
+    codes[signInId] = authorizationCode;
+    identities[authorizationCode] = identity;
+}
+
+function generateTokenFor(identity) {
+    let token = jwt.sign(identity, cert, { algorithm: 'RS512' });
+
+    return token;
+}
+
+function checkCode(code, codeVerifier) {
+    key = Buffer.from(createHash('sha265').update(codeVerifier).digest('hex')).toString('base64');
+    if (challenges[key]) {
+        if (codes[challenges[key]] == code) {
+            delete codes[challenges[key]];
+            delete challenges[key];
+
+            let token = generateTokenFor(identities[code]);
+            delete identities[code];
+            return token;
+        }
+    }
+    delete identities[code];
+    return null;
+}
+
+function generateRefreshTokenFor(identity) {
+    return generateTokenFor(identity);
+}
+
+exports.preSignIn = (req, res) => {
+    // presign token is in the format: base64(clientId:codeChallenge)
+    try {
+        let preAuthorizationHeader = Buffer.from(req.headers['Pre-Authorization'].split('Bearer ')[1], 'base64');
+        let decodedTokenData = preAuthorizationHeader.split(':');
+        let clientId = decodedTokenData[0];
+        let codeChallenge = decodedTokenData[1];
+
+        res.status(200).json({
+            signInId: addChallenge(codeChallenge, clientId)
+        });
+    } catch (err) {
+
+    }
 };
 
-exports.signIn = (req, res) => {
+exports.signIn = async(req, res), next => {
     try {
-        let refreshId = req.body.userId + config.refreshSecret + req.body.jti;
-        let salt = crypto.randomBytes(16).toString('base64');
-        let hash = crypto.createHmac('sha512', salt).update(refreshId).digest("base64");
-        let token = jwt.sign(req.body, cert, { algorithm: 'RS512' });
-        let b = Buffer.from(hash);
-        let refresh_token = salt + '$' + b.toString('base64');
-        res.status(201).send({ accessToken: token, refreshToken: refresh_token });
+        let { username, password, signInId } = req.body;
+
+        if (!(username && password && signInId)) {
+            res.status(401).json({
+                message: 'Missing required fields'
+            });
+            return;
+        }
+
+        let userIdentity = IdentityModel.Identity.findOne({
+            where: {
+                username: req.body.username
+            }
+        });
+
+        if (!userIdentity) {
+            res.status(404).json({
+                message: 'User with that username is not found'
+            });
+            return;
+        }
+
+        let passwordMatch = await argon2.verify(userIdentity.password, req.body.password)
+
+        if (!passwordMatch) {
+            res.status(401).json({
+                message: 'Wrong password'
+            });
+            return;
+        }
+
+        res.status(201).send({ authCode: token, generateAuthorizationCode(signInId, userIdentity) });
     } catch (err) {
-        res.status(500).send({ errors: err });
+        return next(err);
     }
 };
 
 exports.postSignIn = (req, res) => {
+    let postAuthorizationHeader = Buffer.from(req.headers['Post-Authorization'].split('Bearer ')[1], 'base64');
+    let decodedTokenData = postAuthorizationHeader.split(':');
+    let code = decodedTokenData[0];
+    let codeVerifier = decodedTokenData[1];
 
+    let token = checkCode(code, codeVerifier);
+    if (!token) {
+        res.status(401).json({
+            message: 'Failed Login'
+        });
+        return;
+    }
+
+    res.status(200).json({
+        accessToken: token,
+        refreshToken: generateRefreshTokenFor(token)
+    });
 };
 
 exports.refresh_token = (req, res) => {

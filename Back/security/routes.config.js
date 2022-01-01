@@ -1,8 +1,8 @@
 const Authenticator = require('./authentication/authentication.handler');
 
 exports.routesConfig = function (app) {
-    app.post('/preSignIn', Authenticator.preSignIn);
-    app.post('/signin', Authenticator.signIn);
-    app.post('/postSignIn', Authenticator.postSignIn);
-    app.post('/auth/refresh', Authenticator.refresh_token);
+    app.post('/authorize', Authenticator.preSignIn);
+    app.post('/authenticate', Authenticator.signIn);
+    app.post('/oauth/token', Authenticator.postSignIn);
+    app.post('/oauth/token/refresh', Authenticator.refresh_token);
 };
