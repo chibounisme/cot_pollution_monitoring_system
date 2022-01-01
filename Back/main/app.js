@@ -10,7 +10,7 @@ app.set('view engine', 'ejs');
 
 //connect to all databases
 require('./connection.pools')();
-require('../identity/models/identity.schema');
+require('../models/identity.schema');
 
 //connect to MQTT Broker
 require('./mqtt.client');
