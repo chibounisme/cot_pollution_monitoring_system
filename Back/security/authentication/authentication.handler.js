@@ -4,7 +4,7 @@ const validityTime = require('../../main/env.config.js').jwtValidityTimeInSecond
 const crypto = require('crypto');
 const fs = require('fs');
 
-const cert = fs.readFileSync('./tls/example.lcom-key.pem');
+const cert = fs.readFileSync('/etc/letsencrypt/live/pmscot.me/fullchain.pem');
 
 exports.login = (req, res) => {
     try {
