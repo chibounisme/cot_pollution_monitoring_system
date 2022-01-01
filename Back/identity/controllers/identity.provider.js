@@ -17,7 +17,9 @@ exports.signUp = async (req, res, next) => {
             }]
         });
 
-        if (existsWithEmailOrUsername) {
+        console.log(existsWithEmailOrUsername)
+
+        if (!existsWithEmailOrUsername || existsWithEmailOrUsername == []) {
             return res.status(401).send({
                 message: 'User with email or username already exists!'
             });
