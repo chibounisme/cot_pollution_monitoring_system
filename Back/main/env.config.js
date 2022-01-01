@@ -4,5 +4,10 @@ module.exports = {
     'dh-strongfile': '/etc/letsencrypt/live/pmscot.me/dh-strong.pem',
     'main_db_url': 'mongodb+srv://chiboub:chiboub@db-cot.6pho3.mongodb.net/myFirstDatabase?retryWrites=true&w=majority',
     'permissionLevels': ['Master', 'Member', 'Surfer'],
-    'port': 443
+    'port': 443,
+    'mqtt_host': 'mqtt://mqtt.pmscot.me',
+    'mqtt_user': 'mqttchiboub',
+    'mqtt_password': 'chiboub',
+    'mqtt_port': 1883,
+    'mqtt_topic': 'test_topic'
 }
