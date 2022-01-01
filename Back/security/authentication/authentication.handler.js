@@ -53,11 +53,10 @@ function generateRefreshTokenFor(identity) {
 exports.preSignIn = async (req, res, next) => {
     // presign token is in the format: base64(clientId:codeChallenge)
     try {
-        console.log(req.headers);
         preAuthorization = req.headers['pre-authorization'];
-        console.log(preAuthorization.split('Bearer '));
 
         let preAuthorizationHeader = Buffer.from(preAuthorization.split('Bearer ')[1], 'base64');
+        console.log(preAuthorizationHeader);
         let decodedTokenData = preAuthorizationHeader.split(':');
         let clientId = decodedTokenData[0];
         let codeChallenge = decodedTokenData[1];
