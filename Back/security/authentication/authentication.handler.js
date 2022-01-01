@@ -49,6 +49,8 @@ function checkCode(authCode, codeVerifier) {
     let sha265String = hmac.digest('hex');
     key = Buffer.from(sha265String).toString('base64');
 
+    printPKCEData();
+
     if (challenges[key]) {
         if (codes[challenges[key]] == authCode) {
             let token = generateTokenFor(identities[authCode]);
@@ -78,8 +80,6 @@ exports.preSignIn = async (req, res, next) => {
         let codeChallenge = decodedTokenData[1];
         
         let signInId =  addChallenge(codeChallenge, clientId);
-
-        printPKCEData();
 
         res.status(200).json({
             signInId
@@ -131,16 +131,10 @@ exports.signIn = async (req, res, next) => {
 };
 
 exports.postSignIn = async (req, res, next) => {
-    console.log('I am here');
-    console.log(req.headers);
-    console.log(req.headers['post-authorization']);
-
     let postAuthorizationHeader = Buffer.from(req.headers['post-authorization'].split('Bearer ')[1], 'base64').toString();
     let decodedTokenData = postAuthorizationHeader.split(':');
     let authCode = decodedTokenData[0];
     let codeVerifier = decodedTokenData[1];
-    console.log('authCode: ' + authCode);
-    console.log('codeVerifier: ' + codeVerifier);
 
     let token = checkCode(authCode, codeVerifier);
     if (!token) {
