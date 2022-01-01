@@ -1,7 +1,13 @@
-const IdentityModel = require('../../models/identity.model');
+const IdentityModel = require('../../models/identity.schema');
 const argon2 = require('argon2');
 
 exports.signUp = async (req, res, next) => {
+    if (req.body == {} || !(req.body.username && req.body.email && req.body.password)) {
+        res.status(400).send({
+            message: 'Missing required fields'
+        });
+    }
+
     try {
         req.body.password = await argon2.hash(req.body.password, {
             type: argon2.argon2id,

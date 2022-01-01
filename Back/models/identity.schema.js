@@ -1,10 +1,6 @@
 const mongoose = require('mongoose'),
     Schema = mongoose.Schema,
-    argon2 = require('argon2'),
-    // these values can be whatever you want - we're defaulting to a
-    // max of 5 attempts, resulting in a 2 hour lock
-    MAX_LOGIN_ATTEMPTS = 5,
-    LOCK_TIME = 2 * 60 * 60 * 1000;
+    argon2 = require('argon2');
 
 const identitySchema = new Schema({
     forename: String,
@@ -14,9 +10,7 @@ const identitySchema = new Schema({
     username: { type: String, lowercase:true, index : {unique: true}, immutable: true,
                 required: [true,'cannot be undefined'], match: [/^[a-zA-Z][a-zA-Z0-9_]+$/, 'is invalid']},
     password: {type: String, required: true},
-    permissions: { type: Number, default: 0, min: 0, max: 2147483647 },
-    loginAttempts: { type: Number, required: true, default: 0 },
-    lockUntil: { type: Number }
+    permissions: { type: Number, default: 0, min: 0, max: 2147483647 }
 },{
     toObject: { virtuals: true },
     toJSON: { virtuals: true },
@@ -29,28 +23,6 @@ identitySchema.virtual('fullName')
         this.forename = v.substr(0, v.lastIndexOf(' '));
         this.surname = v.substr(v.lastIndexOf(' ') + 1)
     });
-
-identitySchema.virtual('isLocked').get(function() {
-    // check for a future lockUntil timestamp
-    return !!(this.lockUntil && this.lockUntil > Date.now());
-});
-
-identitySchema.methods.incLoginAttempts = function(cb) {
-    // if we have a previous lock that has expired, restart at 1
-    if (this.lockUntil && this.lockUntil < Date.now()) {
-        return this.update({
-            $set: { loginAttempts: 1 },
-            $unset: { lockUntil: 1 }
-        }, cb);
-    }
-    // otherwise we're incrementing
-    let updates = {$inc: {loginAttempts: 1}};
-    // lock the account if we've reached max attempts and it's not locked already
-    if (this.loginAttempts + 1 >= MAX_LOGIN_ATTEMPTS && !this.isLocked) {
-        updates.$set = { lockUntil: Date.now() + LOCK_TIME };
-    }
-    return this.updateOne(updates, cb);
-};
 
 identitySchema.methods.grantPermission = (permission) => {
     this.permissions |= (1<<permission);
@@ -93,40 +65,17 @@ identitySchema.statics.attemptAuthenticate = function(username, password, cb) {
             return cb(null, null, reasons.NOT_FOUND);
         }
 
-        // check if the account is currently locked
-        if (identity.isLocked) {
-            // just increment login attempts if account is already locked
-            return identity.incLoginAttempts(function(err) {
-                if (err) return cb(err);
-                return cb(null, null, reasons.MAX_ATTEMPTS);
-            });
-        }
         // check if the password is a match
         identity.checkPassword(password).then((isMatch) => {
             if(isMatch){
-                // if there's no lock or failed attempts, just return the identity
-                if (!identity.loginAttempts && !identity.lockUntil) return cb(null, identity);
-                // reset attempts and lock info
-                let updates = {
-                    $set: {loginAttempts: 0},
-                    $unset: {lockUntil: 1}
-                };
                 return identity.updateOne(updates, (err) => {
                     if (err) return cb(err);
                     return cb(null, identity);
                 });
             }
-            // password is incorrect, so increment login attempts before responding
-            identity.incLoginAttempts((err) => {
-                if (err) return cb(err);
-                return cb(null, null, reasons.PASSWORD_INCORRECT);
-            });
+            return cb(null, null, reasons.PASSWORD_INCORRECT);
         }).catch(() => {
-            // password is incorrect, so increment login attempts before responding
-            identity.incLoginAttempts((err) => {
-                if (err) return cb(err);
-                return cb(null, null, reasons.PASSWORD_INCORRECT);
-            });
+            return cb(null, null, reasons.PASSWORD_INCORRECT);
         });
     });
 };
@@ -135,4 +84,51 @@ identitySchema.query.byUsername = function (username) {
     return this.where({ username: new RegExp(username, 'i') } ); // 'i' flag to ignore case
 };
 
-mongoose.model('Identity', identitySchema);
+const Identity = mongoose.model('Identity', identitySchema);
+
+exports.findByUsername = (username) => {
+    Identity.findOne().byUsername(username).exec((err, identity) => {
+        if(err){
+            throw err;
+        }
+        return identity;
+    });
+}
+
+exports.triggerLogin = (username, password) => {
+    Identity.attemptAuthenticate(username, password, (err,identity,reason) => {
+        if (err) throw err;
+        // login was successful if we have an identity
+        if (identity) {
+            return identity;
+        }
+        // otherwise we can determine why we failed
+        const reasons = Identity.failedLogin;
+        switch (reason) {
+            case reasons.NOT_FOUND:
+            case reasons.PASSWORD_INCORRECT:
+                throw new Error('Sign In failed');
+            case reasons.MAX_ATTEMPTS:
+                throw new Error('Account temporarily locked');
+        }
+    });
+}
+
+exports.findByEmail = (email) => {
+    return Identity.find({email: email});
+};
+
+exports.findById = (id) => {
+    return Identity.findById(id)
+        .then((result) => {
+            result = result.toJSON();
+            delete result._id;
+            delete result.__v;
+            return result;
+        });
+};
+
+exports.createIdentity = (identityData) => {
+    const identity = new Identity(identityData);
+    return identity.save();
+};
