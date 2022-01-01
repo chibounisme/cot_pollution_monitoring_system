@@ -3,7 +3,7 @@ const jwt = require('jsonwebtoken'),
     crypto = require('crypto');
     fs = require('fs');
 
-const cert = fs.readFileSync('./tls/example.lcom-key.pem');
+const cert = fs.readFileSync('/etc/letsencrypt/live/pmscot.me/fullchain.pem');
 
 exports.validJWTNeeded = (req, res, next) => {
     if (req.headers['authorization']) {
@@ -12,8 +12,8 @@ exports.validJWTNeeded = (req, res, next) => {
             if (authorization[0] !== 'Bearer') {
                 return res.status(401).send();
             } else {
-                var aud = 'urn:'+(req.get('origin')?req.get('origin'):"example.lcom");
-                req.jwt = jwt.verify(authorization[1], cert, {issuer:"urn:example.lcom",audience:aud,algorithms: ['RS512']});
+                var aud = 'urn:'+(req.get('origin')?req.get('origin'):"pmscot.me");
+                req.jwt = jwt.verify(authorization[1], cert, {issuer:"urn:pmscot.me",audience:aud,algorithms: ['RS512']});
                 return next();
             }
         } catch (err) {
