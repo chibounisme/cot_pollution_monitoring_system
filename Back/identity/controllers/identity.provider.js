@@ -61,7 +61,7 @@ exports.getById = async (req, res) => {
 
     const secretKey = fs.readFileSync(config['key-file']);
     const payload = jwt.verify(token, secretKey, { algorithms: 'RS512' });
-    if (!paylod) {
+    if (!payload) {
         res.status(402).json({
             message: 'Invalid JWT'
         });

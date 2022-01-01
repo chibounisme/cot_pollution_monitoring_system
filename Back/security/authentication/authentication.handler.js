@@ -122,7 +122,7 @@ exports.signIn = async (req, res, next) => {
 
         let authCode = generateAuthorizationCode(signInId, userIdentity);
 
-        res.status(201).send({ authCode, userId: userIdentity._id });
+        res.status(201).send({ authCode, userId: userIdentity.id });
     } catch (err) {
         return next(err);
     }
