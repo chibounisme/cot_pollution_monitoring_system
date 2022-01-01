@@ -58,6 +58,8 @@ exports.list = (req, res) => {
 
 exports.getById = (req, res) => {
     const token = req.headers['authorization'].split('Bearer ')[1];
+    console.log(token);
+    console.log(req.headers);
 
     const secretKey = fs.readFileSync(config['key-file']);
     const x = jwt.verify(token, secretKey);
