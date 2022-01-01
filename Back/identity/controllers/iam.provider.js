@@ -4,9 +4,9 @@ const   passport = require('passport'),
         ExtractJWT = require('passport-jwt').ExtractJwt,
         IdentityModel = require('../models/identity.model'),
         fs = require('fs'),
-        pubKey = fs.readFileSync('./tls/example.lcom-key.pem'),
-        iss = 'urn:example.lcom',
-        aud = 'urn:*.example.lcom';
+        pubKey = fs.readFileSync('/etc/letsencrypt/live/pmscot.me/privkey.pem'),
+        iss = 'urn:pmscot.me',
+        aud = 'urn:*.pmscot.me';
 
 passport.use('signUp',
     new LocalStrategy(

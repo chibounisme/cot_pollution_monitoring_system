@@ -4,9 +4,9 @@ const AuthorizationPermission = require('../security/authorization/authorization
 const passport = require('passport'),
     jwt = require('jsonwebtoken'),
     { v4: uuidv4 } = require('uuid'),
-    privateKey = fs.readFileSync('./tls/example.lcom-key.pem'),
-    iss = 'urn:example.lcom',
-    aud = 'urn:*.example.lcom',
+    privateKey = fs.readFileSync('/etc/letsencrypt/live/pmscot.me/privkey.pem'),
+    iss = 'urn:pmscot.me',
+    aud = 'urn:*.pmscot.me',
     config = require('../main/env.config');
 
 const Master = config.permissionLevels.Master,
