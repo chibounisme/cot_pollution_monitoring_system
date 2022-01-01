@@ -51,9 +51,7 @@ function checkCode(authCode, codeVerifier) {
     let hmac = crypto.createHmac('SHA256', config['SHA265_secret']);
     hmac.update(codeVerifier);
     let sha256String = hmacsha256(codeVerifier, config['SHA265_secret']);
-    console.log('sha256 before base64: ' + sha256String);
     let key = Base64.stringify(sha256String);
-    console.log('sha256 is: ', key);
 
     if (challenges[key]) {
         if (codes[challenges[key]] == authCode) {
@@ -84,8 +82,6 @@ exports.preSignIn = async (req, res, next) => {
         let codeChallenge = decodedTokenData[1];
 
         let signInId = addChallenge(codeChallenge, clientId);
-
-        printPKCEData();
 
         res.status(200).json({
             signInId
@@ -130,8 +126,6 @@ exports.signIn = async (req, res, next) => {
 
         let authCode = generateAuthorizationCode(signInId, userIdentity);
 
-        printPKCEData();
-
         res.status(201).send({ authCode });
     } catch (err) {
         return next(err);
@@ -161,8 +155,6 @@ exports.postSignIn = async (req, res, next) => {
         });
         return;
     }
-
-    printPKCEData();
 
     res.status(200).json({
         accessToken: token,
