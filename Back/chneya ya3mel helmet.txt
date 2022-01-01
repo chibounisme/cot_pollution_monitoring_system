@@ -1,0 +1,10 @@
+chneya ya3mel helmet:
+-add: elle definit l'entete http-content-security-policy for protection against cross-site scripting (XSS)
+-delete X-powered-by-header (nhotouh bch manaarfouch chneya el serveur eli 9a3ed yekhdem fel backend, e.g. apache, node js (khamem fel securité faza khayba)
+-hpkp: add public key peeling headers (can be used for impersonification attacks) => permet de protéger le protocole TLS
+-HSTS: add HSTS header
+
+openssl (generate dephi helman strong parameter) ( > 3072)
+how to generate a strong certificate for token (JWT RS512)
+
+use a variable to detect which environment we are working on (e.g. mta3 mr: app-production: true || false)
