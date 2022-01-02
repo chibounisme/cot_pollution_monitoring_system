@@ -32,6 +32,7 @@ export class AuthService {
   // post-signin
   authCode: string;
   postAuthorization: string;
+  authToken: string;
 
   authState = new BehaviorSubject(false);
 
@@ -42,6 +43,7 @@ export class AuthService {
 
   async init() {
     await this.storage.create();
+    await this.storage.clear();
   }
 
   public set(key: string, value: any) {
@@ -85,6 +87,7 @@ export class AuthService {
   setTokens(accessToken, refreshToken) {
     this.set('accessToken', accessToken);
     this.set('refreshToken', refreshToken);
+    this.authToken = accessToken;
     this.setUserId(accessToken);
     this.authState.next(true);
   }
@@ -113,5 +116,9 @@ export class AuthService {
 
   isAuthenticated() {
     return this.authState.value;
+  }
+
+  getAccessToken() {
+    return this.authToken;
   }
 }

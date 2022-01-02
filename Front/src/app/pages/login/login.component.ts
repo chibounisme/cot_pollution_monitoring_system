@@ -56,15 +56,17 @@ export class LoginComponent implements OnInit {
           this.loginToast.message = 'Login Failed!';
           this.loginToast.color = 'danger';
           await this.loginToast.present();
+          console.log(err);
         });
-
+        
         this.loginForm.reset();
       }, async err => {
         this.loadingIndicator.dismiss();
         this.loginToast.message = 'Login Failed!';
         this.loginToast.color = 'danger';
         await this.loginToast.present();
-
+        console.log(err);
+        
         this.loginForm.reset();
       });
     }, async err => {
@@ -72,6 +74,7 @@ export class LoginComponent implements OnInit {
       this.loginToast.message = 'Login Failed!';
       this.loginToast.color = 'danger';
       await this.loginToast.present();
+      console.log(err);
 
       this.loginForm.reset();
     });

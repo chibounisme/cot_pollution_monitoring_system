@@ -1,3 +1,66 @@
-<p>
-  stations works!
-</p>
+<ion-header *ngIf="!isScanning">
+  <ion-toolbar>
+    <ion-title>
+      Stations List
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<br>
+
+<ion-content *ngIf="!isScanning">
+  <ion-card>
+    <ion-card-content>Add, enable, disable and view your stations information.</ion-card-content>
+  </ion-card>
+
+  <ion-list>
+    <ion-item-sliding>
+      <ion-item>
+        <ion-label>Item</ion-label>
+      </ion-item>
+      <ion-item-options side="end">
+        <ion-item-option color="success">Enable</ion-item-option>
+        <ion-item-option color="danger">Disable</ion-item-option>
+        <ion-item-option color="light">Details</ion-item-option>
+      </ion-item-options>
+    </ion-item-sliding>
+
+    <ion-item-sliding>
+      <ion-item>
+        <ion-label>
+          Button Item
+        </ion-label>
+      </ion-item>
+      <ion-item-options side="end">
+        <ion-item-option color="success">Enable</ion-item-option>
+        <ion-item-option color="danger">Disable</ion-item-option>
+        <ion-item-option color="light">Details</ion-item-option>
+      </ion-item-options>
+    </ion-item-sliding>
+  </ion-list>
+  
+  <ion-fab side="end" vertical="bottom" horizontal="end" slot="fixed">
+    <ion-fab-button (click)="openStationModal()">
+      <ion-icon name="add"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+</ion-content>
+
+
+<ion-modal [isOpen]="isAddStationModalOpen" *ngIf="!isScanning">
+  <ng-template>
+    <ion-content>
+      <ion-card>
+        <ion-card-header>
+          <ion-card-subtitle>Link to a New Station</ion-card-subtitle>
+          <ion-card-title>Scan the QR Code on the IoT Node to link it to your account</ion-card-title>
+        </ion-card-header>
+
+        <ion-card-content>
+          <ion-button expand="block" color="success" (click)="scanQRCode()">Scan QR Code</ion-button>
+          <ion-button expand="block" (click)="closeStationModal()">Cancel</ion-button>
+        </ion-card-content>
+      </ion-card>
+    </ion-content>
+  </ng-template>
+</ion-modal>

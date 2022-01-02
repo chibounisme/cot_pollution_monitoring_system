@@ -1,5 +1,7 @@
 {
   "name": "cot_pmscot",
-  "integrations": {},
+  "integrations": {
+    "capacitor": {}
+  },
   "type": "angular"
 }
