@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { BarcodeScanner } from '@capacitor-community/barcode-scanner';
 import { Capacitor } from '@capacitor/core';
 import { Geolocation } from '@capacitor/geolocation';
@@ -19,7 +20,7 @@ export class StationsComponent implements OnInit {
   stations: any[];
 
   constructor(public stationService: StationsService, public authService: AuthService,
-    public toastController: ToastController) {
+    public toastController: ToastController, public router: Router) {
     this.isAddStationModalOpen = false;
     this.isScanning = false;
     if (Capacitor.isNativePlatform()) {
@@ -120,5 +121,9 @@ export class StationsComponent implements OnInit {
         await this.updateToast.present();
       });
     });
+  }
+
+  goToStationDetails(stationId) {
+    this.router.navigate(['stations', stationId]);
   }
 }

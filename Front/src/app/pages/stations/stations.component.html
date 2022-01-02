@@ -24,7 +24,7 @@
         </ion-item-option>
         <ion-item-option *ngIf="station.isEnabled" color="danger" (click)="disableStation(station.id)">Disable
         </ion-item-option>
-        <ion-item-option color="light">Details</ion-item-option>
+        <ion-item-option color="light" (click)="goToStationDetails(station.id)">Details</ion-item-option>
       </ion-item-options>
     </ion-item-sliding>
   </ion-list>

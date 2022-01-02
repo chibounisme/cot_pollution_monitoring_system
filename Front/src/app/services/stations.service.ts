@@ -14,6 +14,10 @@ export class StationsService {
   public getUserStations() {
     return this.http.get<any>(`${this.backendUrl}/stations`);
   }
+  
+  public getStationByStationId(stationId) {
+    return this.http.get<any>(`${this.backendUrl}/stations/${stationId}`);
+  }
 
   public connectToStation(stationId, stationName, stationLat, stationLong) {
     return this.http.post<any>(`${this.backendUrl}/stations`, {

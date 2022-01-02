@@ -14,9 +14,10 @@ import { LoginComponent } from './pages/login/login.component';
 import { RegisterComponent } from './pages/register/register.component';
 import { JwtInterceptor } from './services/jwt.interceptor';
 import { StationsComponent } from './pages/stations/stations.component';
+import { StationDashboardComponent } from './pages/stations/station-dashboard/station-dashboard.component';
 
 @NgModule({
-  declarations: [AppComponent, LoginComponent, RegisterComponent, StationsComponent],
+  declarations: [AppComponent, LoginComponent, RegisterComponent, StationsComponent, StationDashboardComponent],
   entryComponents: [],
   imports: [BrowserModule, CommonModule, IonicModule.forRoot(),
     IonicStorageModule.forRoot(),
