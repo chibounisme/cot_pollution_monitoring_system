@@ -30,6 +30,14 @@ const stationSchema = new Schema({
     lastAirPollutionLevel: {
         type: Number,
         default: 0
+    },
+    microphonePayloadCount: {
+        type: Number,
+        default: 0
+    },
+    airPollutionPayloadCount: {
+        type: Number,
+        default: 0
     }
 }, {
     toObject: { virtuals: true },
