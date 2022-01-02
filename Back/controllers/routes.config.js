@@ -3,7 +3,7 @@ const StationController = require('./stations.controller');
 exports.routesConfig = function (app) {
     app.post('/stations', StationController.connectToStation);
 
-    app.get('/stations/:userId', StationController.getStationsByUserId);
+    app.get('/stations', StationController.getStationsByUserId);
 
     app.get('/stations/:stationId/enable', StationController.enableStation);
     

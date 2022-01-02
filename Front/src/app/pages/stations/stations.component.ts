@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { BarcodeScanner } from '@capacitor-community/barcode-scanner';
 import { Geolocation } from '@capacitor/geolocation';
+import { AuthService } from 'src/app/services/auth.service';
+import { StationsService } from 'src/app/stations.service';
 
 @Component({
   selector: 'app-stations',
@@ -11,7 +13,9 @@ export class StationsComponent implements OnInit {
   isAddStationModalOpen: boolean;
   isScanning: boolean;
 
-  constructor() {
+  stations: [];
+
+  constructor(public stationService: StationsService, public authService: AuthService) {
     this.isAddStationModalOpen = false;
     this.isScanning = false;
     BarcodeScanner.stopScan();

@@ -39,7 +39,7 @@ exports.connectToStation = async (req, res, next) => {
             user_id: payload.id
         };
         let addStation = await StationModel.createStation(resultData);
-        res.status(200).send(JSON.stringify(addStation));
+        res.status(200).json(addStation);
     }
 };
 
@@ -55,14 +55,7 @@ exports.getStationsByUserId = async (req, res) => {
         return;
     }
 
-    if (payload.id != req.params.userId) {
-        res.status(401).send({
-            message: 'Cannot get other people\'s information'
-        });
-        return;
-    }
-
-    let result = await IdentityModel.Identity.find({ user_id: req.params.userId });
+    let result = await IdentityModel.Identity.find({ user_id: payload.id });
     if (!result) {
         res.status(400).send({
             message: 'there was an error with getting the user data'
@@ -70,7 +63,7 @@ exports.getStationsByUserId = async (req, res) => {
         return;
     }
 
-    res.status(200).send(JSON.stringify(result));
+    res.status(200).json(result);
 };
 
 exports.enableStation = async (req, res) => {
@@ -96,7 +89,7 @@ exports.enableStation = async (req, res) => {
     result.isEnabled = true;
     await result.save();
 
-    res.status(200).send(JSON.stringify(result));
+    res.status(200).json(result);
 };
 
 exports.disableStation = async (req, res) => {
@@ -122,5 +115,5 @@ exports.disableStation = async (req, res) => {
     result.isEnabled = false;
     await result.save();
 
-    res.status(200).send(JSON.stringify(result));
+    res.status(200).json(result);
 };

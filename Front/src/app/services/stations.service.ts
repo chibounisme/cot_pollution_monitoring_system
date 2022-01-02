@@ -1,6 +1,5 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Storage } from '@ionic/storage-angular';
 import { environment } from 'src/environments/environment';
 
 @Injectable({
@@ -10,9 +9,23 @@ export class StationsService {
 
   backendUrl: string = environment.backendUrl;
 
-  constructor(private storage: Storage, private http: HttpClient) { }
+  constructor(private http: HttpClient) { }
 
-  getUserStations(userId: string) {
-    return this.http.get<any>(`${this.backendUrl}/users/${userId}/stations`);
+  public getUserStations() {
+    return this.http.get<any>(`${this.backendUrl}/stations`);
+  }
+
+  public connectToStation(stationId, stationName, stationLat, stationLong) {
+    return this.http.post<any>(`${this.backendUrl}/stations`, {
+      stationId, stationName, stationLat, stationLong
+    });
+  }
+
+  public enableUserStation(stationId: string) {
+    return this.http.get<any>(`${this.backendUrl}/stations/${stationId}/enable`);
+  }
+
+  public disableUserStation(stationId: string) {
+    return this.http.get<any>(`${this.backendUrl}/stations/${stationId}/disable`);
   }
 }
