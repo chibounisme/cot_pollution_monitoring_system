@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { BarcodeScanner } from '@capacitor-community/barcode-scanner';
+import { Capacitor } from '@capacitor/core';
 import { Geolocation } from '@capacitor/geolocation';
 import { AuthService } from 'src/app/services/auth.service';
-import { StationsService } from 'src/app/stations.service';
+import { StationsService } from 'src/app/services/stations.service';
 
 @Component({
   selector: 'app-stations',
@@ -18,11 +19,18 @@ export class StationsComponent implements OnInit {
   constructor(public stationService: StationsService, public authService: AuthService) {
     this.isAddStationModalOpen = false;
     this.isScanning = false;
-    BarcodeScanner.stopScan();
-    BarcodeScanner.prepare();
+    if (Capacitor.isNativePlatform()) {
+      BarcodeScanner.stopScan();
+      BarcodeScanner.prepare();
+    }
   }
 
-  ngOnInit() { }
+  ngOnInit() { 
+    this.stationService.getUserStations().subscribe(data => {
+      this.stations = data;
+      console.log(data);
+    });
+  }
 
   openStationModal() {
     this.isAddStationModalOpen = false;
@@ -34,7 +42,9 @@ export class StationsComponent implements OnInit {
   }
   
   scanQRCode() {
-    this.startScan();
+    if(Capacitor.isNativePlatform()) {
+      this.startScan();
+    }
   }
   
   async startScan() {
