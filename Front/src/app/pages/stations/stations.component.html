@@ -17,15 +17,18 @@
     <ion-item-sliding *ngFor="let station of stations; let index = index">
       <ion-item>
         <ion-label>{{station.station_name}}</ion-label>
+        <ion-label>{{station.isEnabled ? 'On' : 'Off'}}</ion-label>
       </ion-item>
       <ion-item-options side="end">
-        <ion-item-option *ngIf="!station.isEnabled" color="success" (click)="enableStation(station.id)">Enable</ion-item-option>
-        <ion-item-option *ngIf="station.isEnabled" color="danger" (click)="disableStation(station.id)">Disable</ion-item-option>
+        <ion-item-option *ngIf="!station.isEnabled" color="success" (click)="enableStation(station.id)">Enable
+        </ion-item-option>
+        <ion-item-option *ngIf="station.isEnabled" color="danger" (click)="disableStation(station.id)">Disable
+        </ion-item-option>
         <ion-item-option color="light">Details</ion-item-option>
       </ion-item-options>
     </ion-item-sliding>
   </ion-list>
-  
+
   <ion-fab side="end" vertical="bottom" horizontal="end" slot="fixed">
     <ion-fab-button (click)="openStationModal()">
       <ion-icon name="add"></ion-icon>
@@ -42,7 +45,7 @@
           <ion-card-subtitle>Link to a New Station</ion-card-subtitle>
           <ion-card-title>Scan the QR Code on the IoT Node to link it to your account</ion-card-title>
         </ion-card-header>
-        
+
         <ion-card-content>
           <ion-button expand="block" color="success" (click)="scanQRCode()">Scan QR Code</ion-button>
           <ion-button expand="block" (click)="closeStationModal()">Cancel</ion-button>

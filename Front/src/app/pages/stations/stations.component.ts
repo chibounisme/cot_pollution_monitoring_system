@@ -31,14 +31,10 @@ export class StationsComponent implements OnInit {
   async ngOnInit() {
     this.stationService.getUserStations().subscribe(data => {
       this.stations = data;
-      console.log(data);
     });
-
-    await BarcodeScanner.checkPermission({ force: true });
-
-    this.updateToast = await this.toastController.create({
-      duration: 2500
-    });
+    if (Capacitor.isNativePlatform()) {
+      await BarcodeScanner.checkPermission({ force: true });
+    }
   }
 
   openStationModal() {
@@ -63,7 +59,7 @@ export class StationsComponent implements OnInit {
     this.isScanning = false;
     if (result.hasContent) {
       await BarcodeScanner.showBackground();
-      
+
       const stationId = JSON.parse(result.content).station_id;
       const stationName = JSON.parse(result.content).station_name;
       // get the coordinates
@@ -72,40 +68,55 @@ export class StationsComponent implements OnInit {
       // check if station is Added 
       this.stationService.connectToStation(stationId, stationName, coordinates.coords.latitude, coordinates.coords.longitude)
         .subscribe(async data => {
-          alert(JSON.stringify(data));
           this.isAddStationModalOpen = false;
-          
-          this.updateToast.message = 'Connected to station successfully!';
-          this.updateToast.color = 'success';
-          await this.updateToast.present();
-        }, async err => {
 
-          this.updateToast.message = 'The station has been already added to an account!';
-          this.updateToast.color = 'danger';
+          this.stationService.getUserStations().subscribe(async data => {
+            this.stations = data;
+            this.updateToast = await this.toastController.create({
+              duration: 2500,
+              message: 'Connected to station successfully!',
+              color: 'success'
+            });
+            await this.updateToast.present();
+          });
+        }, async err => {
+          this.updateToast = await this.toastController.create({
+            duration: 2500,
+            message: 'The station has been already added to an account!',
+            color: 'danger'
+          });
+
           await this.updateToast.present();
         });
     }
   };
 
-  enableStation(stationId) {
+  async enableStation(stationId) {
+    this.updateToast = await this.toastController.create({
+      duration: 2500,
+      message: 'Enabled station successfully!',
+      color: 'success'
+    });
+
+    await this.updateToast.dismiss();
     this.stationService.enableUserStation(stationId).subscribe(_ => {
       this.stationService.getUserStations().subscribe(async data => {
         this.stations = data;
-
-        this.updateToast.message = 'Enabled station successfully!';
-        this.updateToast.color = 'success';
         await this.updateToast.present();
       });
     });
   }
-  
-  disableStation(stationId) {
+
+  async disableStation(stationId) {
+    this.updateToast = await this.toastController.create({
+      duration: 2500,
+      message: 'Disabled station successfully!',
+      color: 'success'
+    });
+
     this.stationService.disableUserStation(stationId).subscribe(_ => {
       this.stationService.getUserStations().subscribe(async data => {
         this.stations = data;
-
-        this.updateToast.message = 'Disabled station successfully!';
-        this.updateToast.color = 'success';
         await this.updateToast.present();
       });
     });

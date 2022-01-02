@@ -43,6 +43,29 @@ exports.connectToStation = async (req, res, next) => {
     }
 };
 
+exports.getStationsByStationId = async (req, res) => {
+    const token = req.headers['authorization'].split('Bearer ')[1];
+
+    const secretKey = fs.readFileSync(config['key-file']);
+    const payload = jwt.verify(token, secretKey, { algorithms: 'RS512' });
+    if (!payload) {
+        res.status(402).json({
+            message: 'Invalid JWT'
+        });
+        return;
+    }
+
+    let result = await StationModel.Station.find({ id: req.params.stationId, user_id: payload.id });
+    if (!result) {
+        res.status(400).send({
+            message: 'there was an error with getting the user data'
+        });
+        return;
+    }
+
+    res.status(200).json(result);
+};
+
 exports.getStationsByUserId = async (req, res) => {
     const token = req.headers['authorization'].split('Bearer ')[1];
 
@@ -79,9 +102,7 @@ exports.enableStation = async (req, res) => {
     }
 
     let result = await StationModel.Station.findOne({ id: req.params.stationId, user_id: payload.id });
-    
-    console.log(JSON.stringify(result));
-    
+
     if (!result) {
         res.status(400).send({
             message: 'there was an error with getting the user data'
