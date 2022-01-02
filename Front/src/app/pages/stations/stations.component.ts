@@ -126,4 +126,8 @@ export class StationsComponent implements OnInit {
   goToStationDetails(stationId) {
     this.router.navigate(['stations', stationId]);
   }
+
+  isNativePlatform() {
+    return Capacitor.isNativePlatform();
+  }
 }

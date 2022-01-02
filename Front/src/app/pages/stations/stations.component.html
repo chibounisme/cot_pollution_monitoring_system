@@ -29,7 +29,7 @@
     </ion-item-sliding>
   </ion-list>
 
-  <ion-fab side="end" vertical="bottom" horizontal="end" slot="fixed">
+  <ion-fab *ngIf="isNativePlatform()" side="end" vertical="bottom" horizontal="end" slot="fixed">
     <ion-fab-button (click)="openStationModal()">
       <ion-icon name="add"></ion-icon>
     </ion-fab-button>
