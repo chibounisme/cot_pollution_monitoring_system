@@ -104,6 +104,8 @@ exports.disableStation = async (req, res) => {
         return;
     }
 
+    console.log(req.params.stationId, payload.id)
+
     let result = await StationModel.Station.findOne({ id: req.params.stationId, user_id: payload.id });
     if (!result) {
         res.status(400).send({
