@@ -12,11 +12,22 @@ const stationSchema = new Schema({
         type: Boolean,
         default: true
     },
-    microphoneLevelAvg: {
+    lastUpdatedAt: {
+        type: Date
+    },
+    avgMicrophonelevel: {
         type: Number,
         default: 0
     },
-    airPollutionLevelAvg: {
+    lastMicrophoneLevel: {
+        type: Number,
+        default: 0
+    },
+    avgAirPollutionLevel: {
+        type: Number,
+        default: 0
+    },
+    lastAirPollutionLevel: {
         type: Number,
         default: 0
     }
