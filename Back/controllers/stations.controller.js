@@ -32,6 +32,7 @@ exports.connectToStation = async (req, res, next) => {
     } else {
         let resultData = {
             added_at: new Date(),
+            lastUpdatedAt: new Date(),
             station_name: stationName,
             station_id: stationId,
             station_lat: stationLat,

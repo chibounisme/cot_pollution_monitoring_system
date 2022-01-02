@@ -25,12 +25,12 @@ export class StationDashboardComponent implements OnInit, OnDestroy {
 
     const markPoint = Leaflet.marker([28.644800, 77.594563], {
       icon: Leaflet.icon({
-        iconUrl: 'assets/marker-icon.png',
+        iconUrl: 'assets/marker-icon-2x.png',
         shadowUrl: 'assets/marker-shadow.png',
         iconSize: [38, 95], // size of the icon
         shadowSize: [50, 64], // size of the shadow
         iconAnchor: [22, 94], // point of the icon which will correspond to marker's location
-        shadowAnchor: [4, 62],  // the same for the shadow
+        shadowAnchor: [18, 62],  // the same for the shadow
         popupAnchor: [-3, -76] // point from which the popup should open relative to the iconAnchor
       })
     });
@@ -55,5 +55,12 @@ export class StationDashboardComponent implements OnInit, OnDestroy {
     this.map.remove();
   }
 
+  doRefresh(event) {
+    console.log('Begin async operation');
 
+    setTimeout(() => {
+      console.log('Async operation has ended');
+      event.target.complete();
+    }, 2000);
+  }
 }
