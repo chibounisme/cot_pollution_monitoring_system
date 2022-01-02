@@ -1,11 +1,14 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { v4 } from 'uuid';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import * as hmacsha256 from 'crypto-js/hmac-sha256';
 import * as Base64 from 'crypto-js/enc-base64';
+import { Storage } from '@ionic/storage-angular';
 
 import { environment } from '../../environments/environment';
+import { BehaviorSubject } from 'rxjs';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
@@ -29,13 +32,24 @@ export class AuthService {
   // post-signin
   authCode: string;
   postAuthorization: string;
-  accessToken: string;
-  refreshToken: string;
 
-  connectedUserId: string;
+  authState = new BehaviorSubject(false);
 
-  constructor(private http: HttpClient) {
+  constructor(private storage: Storage, private http: HttpClient, private router: Router) {
     this.jwtHelper = new JwtHelperService();
+    this.init();
+  }
+
+  async init() {
+    await this.storage.create();
+  }
+
+  public set(key: string, value: any) {
+    this.storage?.set(key, value);
+  }
+
+  public get(key: string) {
+    return this.storage?.get(key);
   }
 
   initAuthService() {
@@ -45,7 +59,6 @@ export class AuthService {
   }
 
   preSignIn() {
-    console.log(this.codeChallenge);
     this.preAuthorization = 'Bearer ' + btoa(this.clientId + ':' + this.codeChallenge);
 
     // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -63,7 +76,6 @@ export class AuthService {
 
   postSignIn(authCode) {
     this.authCode = authCode;
-    console.log(this.authCode, this.codeVerifier);
     this.postAuthorization = 'Bearer ' + btoa(this.authCode + ':' + this.codeVerifier);
 
     // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -71,13 +83,29 @@ export class AuthService {
   }
 
   setTokens(accessToken, refreshToken) {
-    this.accessToken = accessToken;
-    this.refreshToken = refreshToken;
-    this.setUserId(this.accessToken);
+    this.set('accessToken', accessToken);
+    this.set('refreshToken', refreshToken);
+    this.setUserId(accessToken);
+    this.authState.next(true);
   }
 
   setUserId(accessToken) {
     const accessTokenPayload = this.jwtHelper.decodeToken(accessToken);
-    this.connectedUserId = accessTokenPayload.id;
+    this.set('connectedUserId', accessTokenPayload.id);
+  }
+
+  async getUserId() {
+    return await this.get('connectedUserId');
+  }
+
+  logout() {
+    this.storage.clear().then(() => {
+      this.router.navigate(['login']);
+      this.authState.next(false);
+    });
+  }
+
+  isAuthenticated() {
+    return this.authState.value;
   }
 }

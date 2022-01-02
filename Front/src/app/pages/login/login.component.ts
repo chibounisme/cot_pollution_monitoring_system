@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { LoadingController } from '@ionic/angular';
+import { Router } from '@angular/router';
+import { LoadingController, ToastController } from '@ionic/angular';
 import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
@@ -12,47 +13,68 @@ export class LoginComponent implements OnInit {
 
   loginForm: FormGroup;
   loadingIndicator: HTMLIonLoadingElement;
+  loginToast: HTMLIonToastElement;
 
-  constructor(public formBuilder: FormBuilder, public loadingController: LoadingController, private authService: AuthService) { }
+  constructor(public formBuilder: FormBuilder, public loadingController: LoadingController,
+    public toastController: ToastController, private authService: AuthService,
+    private router: Router) { }
 
   async ngOnInit() {
     this.loginForm = this.formBuilder.group({
       username: ['', [Validators.required, Validators.minLength(5)]],
       password: ['', [Validators.required, Validators.minLength(8)]]
     });
-
-    this.loadingIndicator = await this.loadingController.create({
-      message: 'Loading...'
-    });
   }
 
   async submitLoginForm() {
+    this.loadingIndicator = await this.loadingController.create({
+      message: 'Loading...'
+    });
+    this.loginToast = await this.toastController.create({
+      duration: 5000
+    });
+
     await this.loadingIndicator.present();
     this.authService.initAuthService();
     this.authService.preSignIn().subscribe(preSignInData => {
-      console.log(preSignInData);
       const signInId = preSignInData.signInId;
       const username = this.loginForm.value.username;
       const password = this.loginForm.value.password;
       this.authService.signIn(signInId, username, password).subscribe(signInData => {
-        console.log(signInData);
         const authCode = signInData.authCode;
-        this.authService.postSignIn(authCode).subscribe(postSignInData => {
+        this.authService.postSignIn(authCode).subscribe(async postSignInData => {
           const accessToken = postSignInData.accessToken;
           const refreshToken = postSignInData.refreshToken;
           this.authService.setTokens(accessToken, refreshToken);
           this.loadingIndicator.dismiss();
-        }, err => {
-          console.log('third step');
-          console.log(err);
+          this.loginToast.message = 'Successfully connected!';
+          this.loginToast.color = 'success';
+          await this.loginToast.present();
+          this.router.navigate(['/stations']);
+          console.log(await this.authService.getUserId());
+        }, async err => {
+          this.loadingIndicator.dismiss();
+          this.loginToast.message = 'Login Failed!';
+          this.loginToast.color = 'danger';
+          await this.loginToast.present();
         });
-      }, err => {
-        console.log('second step');
-        console.log(err);
+
+        this.loginForm.reset();
+      }, async err => {
+        this.loadingIndicator.dismiss();
+        this.loginToast.message = 'Login Failed!';
+        this.loginToast.color = 'danger';
+        await this.loginToast.present();
+
+        this.loginForm.reset();
       });
-    }, err => {
-      console.log('first step');
-      console.log(err);
+    }, async err => {
+      this.loadingIndicator.dismiss();
+      this.loginToast.message = 'Login Failed!';
+      this.loginToast.color = 'danger';
+      await this.loginToast.present();
+
+      this.loginForm.reset();
     });
   }
 }

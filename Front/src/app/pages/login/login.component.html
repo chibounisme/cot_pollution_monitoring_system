@@ -9,7 +9,7 @@
     </ion-card-content>
   </ion-card>
 
-  <form [formGroup]="loginForm" (ngSubmit)="submitLoginForm()" novalidate>
+  <form [formGroup]="loginForm" (ngSubmit)="submitLoginForm()" (keyup.enter)="submitLoginForm()" novalidate>
     <ion-card>
       <ion-card-header>
         <ion-card-title>Login</ion-card-title>
