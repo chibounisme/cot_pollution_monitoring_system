@@ -56,7 +56,7 @@ exports.getStationsByStationId = async (req, res) => {
         return;
     }
 
-    let result = await StationModel.Station.find({ id: req.params.stationId, user_id: payload.id });
+    let result = await StationModel.Station.findById(req.params.stationId);
     if (!result) {
         res.status(400).send({
             message: 'there was an error with getting the user data'

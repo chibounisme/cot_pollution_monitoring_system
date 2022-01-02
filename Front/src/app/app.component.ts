@@ -10,6 +10,7 @@ export class AppComponent {
   public loginPage = { title: 'Login', url: '/login', icon: 'log-in' };
   public stationsPage = {title: 'Stations', url :'/stations', icon:'flag' }
   public registerPage = { title: 'Register', url: '/register', icon: 'person-add' };
+  public findPathPage = { title: 'Optimal Station Path', url: '/path', icon: 'person-add' };
   public logoutPage = { title: 'Logout', url: '/logout', icon: 'log-out' };
 
 

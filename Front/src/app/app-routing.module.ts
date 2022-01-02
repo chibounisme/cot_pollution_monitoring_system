@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
 import { LoginComponent } from './pages/login/login.component';
 import { RegisterComponent } from './pages/register/register.component';
+import { FindPathComponent } from './pages/stations/find-path/find-path.component';
 import { StationDashboardComponent } from './pages/stations/station-dashboard/station-dashboard.component';
 import { StationsComponent } from './pages/stations/stations.component';
 import { AuthguardService } from './services/authguard.service';
@@ -31,6 +32,11 @@ const routes: Routes = [
     canActivate: [AuthguardService]
   },
   {
+    path: 'path',
+    component: FindPathComponent,
+    canActivate: [AuthguardService]
+  },
+  {
     path: '**',
     redirectTo: ''
   }
@@ -38,8 +44,8 @@ const routes: Routes = [
 
 @NgModule({
   imports: [
-    RouterModule.forRoot(routes, { preloadingStrategy: PreloadAllModules })
+    RouterModule.forRoot(routes, { onSameUrlNavigation: 'reload' })
   ],
   exports: [RouterModule]
 })
-export class AppRoutingModule {}
+export class AppRoutingModule { }

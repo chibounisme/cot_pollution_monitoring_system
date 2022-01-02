@@ -15,9 +15,10 @@ import { RegisterComponent } from './pages/register/register.component';
 import { JwtInterceptor } from './services/jwt.interceptor';
 import { StationsComponent } from './pages/stations/stations.component';
 import { StationDashboardComponent } from './pages/stations/station-dashboard/station-dashboard.component';
+import { FindPathComponent } from './pages/stations/find-path/find-path.component';
 
 @NgModule({
-  declarations: [AppComponent, LoginComponent, RegisterComponent, StationsComponent, StationDashboardComponent],
+  declarations: [AppComponent, LoginComponent, RegisterComponent, StationsComponent, StationDashboardComponent, FindPathComponent],
   entryComponents: [],
   imports: [BrowserModule, CommonModule, IonicModule.forRoot(),
     IonicStorageModule.forRoot(),

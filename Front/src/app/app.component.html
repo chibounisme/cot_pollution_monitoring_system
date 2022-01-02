@@ -18,6 +18,10 @@
               <ion-icon slot="start" [ios]="stationsPage.icon + '-outline'" [md]="stationsPage.icon + '-sharp'"></ion-icon>
               <ion-label>{{ stationsPage.title }}</ion-label>
             </ion-item>
+            <ion-item *ngIf="authService.isAuthenticated()" routerDirection="root" [routerLink]="[findPathPage.url]" lines="none" detail="false" routerLinkActive="selected">
+              <ion-icon slot="start" [ios]="findPathPage.icon + '-outline'" [md]="findPathPage.icon + '-sharp'"></ion-icon>
+              <ion-label>{{ findPathPage.title }}</ion-label>
+            </ion-item>
             <ion-item *ngIf="authService.isAuthenticated()" (click)="onLogout()">
               <ion-icon slot="start" [ios]="logoutPage.icon + '-outline'" [md]="logoutPage.icon + '-sharp'"></ion-icon>
               <ion-label>{{ logoutPage.title }}</ion-label>

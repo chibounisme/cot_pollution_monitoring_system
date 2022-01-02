@@ -1,12 +1,12 @@
-<ion-header *ngIf="loadedData">
-  <ion-toolbar>
-    <ion-title>
-      {{ station.station_name }}
-    </ion-title>
-  </ion-toolbar>
-</ion-header>
+<ion-content *ngIf="loadedData">
+  <ion-header>
+    <ion-toolbar>
+      <ion-title>
+        {{ station.station_name }}
+      </ion-title>
+    </ion-toolbar>
+  </ion-header>
 
-<ion-content>
   <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
     <ion-refresher-content></ion-refresher-content>
   </ion-refresher>
@@ -15,7 +15,7 @@
     <ion-card-content>View latest info on this station</ion-card-content>
   </ion-card>
 
-  <div id="mapId" style="width: 100%; height: 50vh"></div>
+  <div id="detailsMap" style="width: 100%; height: 55vh"></div>
 
   <ion-list>
     <ion-item>
