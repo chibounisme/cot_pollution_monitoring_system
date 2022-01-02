@@ -78,7 +78,7 @@ exports.enableStation = async (req, res) => {
         return;
     }
 
-    let result = await StationModel.Station.findOne({ station_id: req.params.stationId, user_id: payload.id });
+    let result = await StationModel.Station.findOne({ id: req.params.stationId, user_id: payload.id });
     if (!result) {
         res.status(400).send({
             message: 'there was an error with getting the user data'
@@ -104,7 +104,7 @@ exports.disableStation = async (req, res) => {
         return;
     }
 
-    let result = await StationModel.Station.findOne({ station_id: req.params.stationId, user_id: payload.id });
+    let result = await StationModel.Station.findOne({ id: req.params.stationId, user_id: payload.id });
     if (!result) {
         res.status(400).send({
             message: 'there was an error with getting the user data'

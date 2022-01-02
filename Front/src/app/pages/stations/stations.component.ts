@@ -75,18 +75,24 @@ export class StationsComponent implements OnInit {
   };
 
   enableStation(stationId) {
+    console.log(stationId);
     this.stationService.enableUserStation(stationId).subscribe(_ => {
       this.stationService.getUserStations().subscribe(data => {
         this.stations = data;
       });
+    }, err => {
+      alert(JSON.stringify(err));
     });
   }
-
+  
   disableStation(stationId) {
+    console.log(stationId);
     this.stationService.disableUserStation(stationId).subscribe(_ => {
       this.stationService.getUserStations().subscribe(data => {
         this.stations = data;
       });
+    }, err => {
+      alert(JSON.stringify(err));
     });
   }
 }
