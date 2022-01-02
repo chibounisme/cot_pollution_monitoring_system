@@ -42,10 +42,9 @@
           <ion-card-subtitle>Link to a New Station</ion-card-subtitle>
           <ion-card-title>Scan the QR Code on the IoT Node to link it to your account</ion-card-title>
         </ion-card-header>
-
+        
         <ion-card-content>
           <ion-button expand="block" color="success" (click)="scanQRCode()">Scan QR Code</ion-button>
-          <ion-text *ngIf="isConnectToStationError">The Station corresponding to the QR Code has been already added</ion-text>
           <ion-button expand="block" (click)="closeStationModal()">Cancel</ion-button>
         </ion-card-content>
       </ion-card>

@@ -79,6 +79,9 @@ exports.enableStation = async (req, res) => {
     }
 
     let result = await StationModel.Station.findOne({ id: req.params.stationId, user_id: payload.id });
+    
+    console.log(JSON.stringify(result));
+    
     if (!result) {
         res.status(400).send({
             message: 'there was an error with getting the user data'
@@ -103,8 +106,6 @@ exports.disableStation = async (req, res) => {
         });
         return;
     }
-
-    console.log(req.params.stationId, payload.id)
 
     let result = await StationModel.Station.findOne({ id: req.params.stationId, user_id: payload.id });
     if (!result) {

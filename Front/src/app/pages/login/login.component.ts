@@ -31,7 +31,7 @@ export class LoginComponent implements OnInit {
       message: 'Loading...'
     });
     this.loginToast = await this.toastController.create({
-      duration: 5000
+      duration: 2500
     });
 
     await this.loadingIndicator.present();
