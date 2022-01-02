@@ -18,16 +18,19 @@ require('./connection.pools')();
 //initialize schemas
 require('../models/identity.schema');
 require('../models/mqttData.schema');
+require('../models/stations.schema');
 
 //connect to MQTT Broker
 require('./mqtt.client');
 
 const SecurityRouter = require('../security/routes.config');
 const IdentityRouter = require('../identity/routes.config');
+const MainRouter = require('../controllers/routes.config');
 
 //bind routes to the express application
 SecurityRouter.routesConfig(app);
 IdentityRouter.routesConfig(app);
+MainRouter.routesConfig(app);
 
 //add error middleware
 app.use(function (err, req, res, next) {

@@ -95,8 +95,6 @@ exports.signIn = async (req, res, next) => {
     try {
         let { username, password, signInId } = req.body;
 
-        console.log(username, password, signInId);
-
         if (!(username && password && signInId)) {
             res.status(401).json({
                 message: 'Missing required fields'
@@ -115,23 +113,16 @@ exports.signIn = async (req, res, next) => {
             return;
         }
 
-        console.log(userIdentity);
-
         let passwordMatch = await argon2.verify(userIdentity.password, req.body.password);
 
         if (!passwordMatch) {
-            console.log('passwords dont match :/')
             res.status(401).json({
                 message: 'Wrong user/password combination'
             });
             return;
         }
 
-        console.log(passwordMatch);
-
         let authCode = generateAuthorizationCode(signInId, userIdentity);
-
-        console.log(authCode);
 
         res.status(201).send({ authCode });
     } catch (err) {
