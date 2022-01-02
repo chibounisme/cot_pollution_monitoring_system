@@ -17,7 +17,7 @@
       <ion-card-content>
         <ion-item>
           <ion-label position="floating">Username</ion-label>
-          <ion-input formControlName="username" type="username"></ion-input>
+          <ion-input formControlName="username" type="text"></ion-input>
         </ion-item>
         <div class="error ion-padding" *ngIf="loginForm.controls.username.dirty && loginForm.controls.username.errors?.required">
           Name is required.
@@ -44,4 +44,9 @@
       </ion-card-content>
     </ion-card>
   </form>
+  <ion-content class="ion-text-center">
+    <div>
+     <h4 class="gray">Don't have an account? <a routerLink="/register">Sign Up</a></h4>
+    </div>
+   </ion-content>
 </div>

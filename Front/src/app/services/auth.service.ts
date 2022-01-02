@@ -105,6 +105,12 @@ export class AuthService {
     });
   }
 
+  signUp(firstname, lastname, username, password, email) {
+    return this.http.post<any>(`${this.backendUrl}/signup`, {
+      firstname, lastname, username, password, email
+    });
+  }
+
   isAuthenticated() {
     return this.authState.value;
   }

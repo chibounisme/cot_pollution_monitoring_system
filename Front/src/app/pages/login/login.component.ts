@@ -51,7 +51,6 @@ export class LoginComponent implements OnInit {
           this.loginToast.color = 'success';
           await this.loginToast.present();
           this.router.navigate(['/stations']);
-          console.log(await this.authService.getUserId());
         }, async err => {
           this.loadingIndicator.dismiss();
           this.loginToast.message = 'Login Failed!';

@@ -1,3 +1,89 @@
-<p>
-  register works!
-</p>
+<div>
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Welcome to PMS</ion-card-title>
+    </ion-card-header>
+
+    <ion-card-content>
+      Track pollution within your city with a few button presses.
+    </ion-card-content>
+  </ion-card>
+
+  <form [formGroup]="registerForm" (ngSubmit)="submitRegisterForm()" (keyup.enter)="submitRegisterForm()" novalidate>
+    <ion-card>
+      <ion-card-header>
+        <ion-card-title>Sign up</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+
+        <ion-item>
+          <ion-label position="floating">Username</ion-label>
+          <ion-input formControlName="username" type="text"></ion-input>
+        </ion-item>
+        <div class="error ion-padding"
+          *ngIf="registerForm.controls.username.dirty && registerForm.controls.username.errors?.required">
+          Name is required.
+        </div>
+        <div class="error ion-padding"
+          *ngIf="registerForm.controls.username.dirty && registerForm.controls.username.errors?.minlength">
+          Name should be min 5 chars long.
+        </div>
+
+        <ion-item>
+          <ion-label position="floating">First Name</ion-label>
+          <ion-input formControlName="firstname" type="text"></ion-input>
+        </ion-item>
+        <div class="error ion-padding"
+          *ngIf="registerForm.controls.firstname.dirty && registerForm.controls.firstname.errors?.required">
+          Name is required.
+        </div>
+
+        <ion-item>
+          <ion-label position="floating">Last Name</ion-label>
+          <ion-input formControlName="lastname" type="text"></ion-input>
+        </ion-item>
+        <div class="error ion-padding"
+          *ngIf="registerForm.controls.lastname.dirty && registerForm.controls.lastname.errors?.required">
+          Name is required.
+        </div>
+
+        <ion-item>
+          <ion-label position="floating">Email</ion-label>
+          <ion-input formControlName="email" type="email"></ion-input>
+        </ion-item>
+        <div class="error ion-padding"
+          *ngIf="registerForm.controls.email.dirty && registerForm.controls.email.errors?.required">
+          Email is required.
+        </div>
+        <div class="error ion-padding"
+          *ngIf="registerForm.controls.email.dirty && registerForm.controls.email.errors?.email">
+          Email should be valid.
+        </div>
+
+        <ion-item>
+          <ion-label position="floating">Password</ion-label>
+          <ion-input formControlName="password" type="password"></ion-input>
+        </ion-item>
+        <div class="error ion-padding"
+          *ngIf="registerForm.controls.password.dirty && registerForm.controls.password.errors?.required">
+          Password is required.
+        </div>
+        <div class="error ion-padding"
+          *ngIf="registerForm.controls.password.dirty && registerForm.controls.password.errors?.minlength">
+          Password should be min 8 chars long.
+        </div>
+
+        <ion-row>
+          <ion-col>
+            <ion-button type="submit" color="primary" expand="block" [disabled]="registerForm.invalid">Sign Up</ion-button>
+          </ion-col>
+        </ion-row>
+      </ion-card-content>
+    </ion-card>
+  </form>
+  <ion-content class="ion-text-center">
+    <div>
+      <h4 class="gray">Already have an account? <a routerLink="/login">Sign In</a></h4>
+    </div>
+  </ion-content>
+</div>
