@@ -7,6 +7,12 @@
 </ion-header>
 
 <ion-content>
-  <ion-text *ngIf="stations.length === 0"> You need to have at least one active station</ion-text>
-  <div id="findPathMap" style="width: 100%; height: 55vh"></div>
+  <ion-row>
+    <ion-col size="12">
+      <ion-text *ngIf="!existsStations.value" style="text-align: center">
+        <h1> You need to have at least one active station</h1>
+      </ion-text>
+    </ion-col>
+  </ion-row>
+  <div id="findPathMap" [ngClass]="{'ion-hide': !existsStations.value }" style="width: 100%; height: 92vh"></div>
 </ion-content>
