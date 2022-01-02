@@ -13,11 +13,13 @@ import { StationsService } from 'src/app/services/stations.service';
 export class StationsComponent implements OnInit {
   isAddStationModalOpen: boolean;
   isScanning: boolean;
+  isConnectToStationError: boolean;
 
-  stations: [];
+  stations: any[];
 
   constructor(public stationService: StationsService, public authService: AuthService) {
     this.isAddStationModalOpen = false;
+    this.isConnectToStationError = false;
     this.isScanning = false;
     if (Capacitor.isNativePlatform()) {
       BarcodeScanner.stopScan();
@@ -25,7 +27,7 @@ export class StationsComponent implements OnInit {
     }
   }
 
-  ngOnInit() { 
+  ngOnInit() {
     this.stationService.getUserStations().subscribe(data => {
       this.stations = data;
       console.log(data);
@@ -40,27 +42,51 @@ export class StationsComponent implements OnInit {
   closeStationModal() {
     this.isAddStationModalOpen = false;
   }
-  
+
   scanQRCode() {
-    if(Capacitor.isNativePlatform()) {
+    if (Capacitor.isNativePlatform()) {
       this.startScan();
     }
   }
-  
+
   async startScan() {
     this.isScanning = true;
+    this.isConnectToStationError = false;
     await BarcodeScanner.checkPermission({ force: true });
     await BarcodeScanner.hideBackground();
     const result = await BarcodeScanner.startScan();
     if (result.hasContent) {
       this.isAddStationModalOpen = false;
       const stationId = JSON.parse(result.content).station_id;
+      const stationName = JSON.parse(result.content).station_name;
       // get the coordinates
       const coordinates = await Geolocation.getCurrentPosition();
-      alert(`${stationId} -- ${JSON.stringify(coordinates.coords)}`)
+      
       // check if station is Added 
-
+      this.stationService.connectToStation(stationId, stationName, coordinates.coords.latitude, coordinates.coords.longitude)
+        .subscribe(data => {
+          this.isScanning = false;
+        }, err => {
+          this.isScanning = false;
+          this.isConnectToStationError = true;
+          alert(JSON.stringify(err));
+        });
     }
-    this.isScanning = false;
   };
+
+  enableStation(stationId) {
+    this.stationService.enableUserStation(stationId).subscribe(_ => {
+      this.stationService.getUserStations().subscribe(data => {
+        this.stations = data;
+      });
+    });
+  }
+
+  disableStation(stationId) {
+    this.stationService.disableUserStation(stationId).subscribe(_ => {
+      this.stationService.getUserStations().subscribe(data => {
+        this.stations = data;
+      });
+    });
+  }
 }

@@ -14,26 +14,13 @@
   </ion-card>
 
   <ion-list>
-    <ion-item-sliding>
+    <ion-item-sliding *ngFor="let station of stations; let index = index">
       <ion-item>
-        <ion-label>Item</ion-label>
+        <ion-label>{{station.station_name}}</ion-label>
       </ion-item>
       <ion-item-options side="end">
-        <ion-item-option color="success">Enable</ion-item-option>
-        <ion-item-option color="danger">Disable</ion-item-option>
-        <ion-item-option color="light">Details</ion-item-option>
-      </ion-item-options>
-    </ion-item-sliding>
-
-    <ion-item-sliding>
-      <ion-item>
-        <ion-label>
-          Button Item
-        </ion-label>
-      </ion-item>
-      <ion-item-options side="end">
-        <ion-item-option color="success">Enable</ion-item-option>
-        <ion-item-option color="danger">Disable</ion-item-option>
+        <ion-item-option *ngIf="!station.isEnabled" color="success" (click)="enableStation(station.id)">Enable</ion-item-option>
+        <ion-item-option *ngIf="station.isEnabled" color="danger" (click)="disableStation(station.id)">Disable</ion-item-option>
         <ion-item-option color="light">Details</ion-item-option>
       </ion-item-options>
     </ion-item-sliding>
@@ -58,6 +45,7 @@
 
         <ion-card-content>
           <ion-button expand="block" color="success" (click)="scanQRCode()">Scan QR Code</ion-button>
+          <ion-text *ngIf="isConnectToStationError">The Station corresponding to the QR Code has been already added</ion-text>
           <ion-button expand="block" (click)="closeStationModal()">Cancel</ion-button>
         </ion-card-content>
       </ion-card>

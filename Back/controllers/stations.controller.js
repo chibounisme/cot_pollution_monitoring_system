@@ -24,7 +24,7 @@ exports.connectToStation = async (req, res, next) => {
     }
 
     let result = await StationModel.Station.findOne({ station_id: stationId });
-    if (!result) {
+    if (result) {
         res.status(403).send({
             message: 'Station is already assigned, please link another one'
         });
