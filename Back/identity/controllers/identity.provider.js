@@ -22,14 +22,7 @@ exports.signUp = async (req, res, next) => {
             return;
         }
 
-        req.body.password = await argon2.hash(req.body.password, {
-            type: argon2.argon2id,
-            memoryCost: 2 ** 16,
-            hashLength: 64,
-            saltLength: 32,
-            timeCost: 11,
-            parallelism: 2
-        });
+        req.body.password = await argon2.hash(req.body.password);
 
         if (!req.body.permissions)
             req.body.permissions = 0;
