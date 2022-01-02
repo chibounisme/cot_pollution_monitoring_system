@@ -1,6 +1,6 @@
 const StationModel = require('../models/stations.schema');
 const jwt = require('jsonwebtoken');
-const config = require('../../main/env.config');
+const config = require('../main/env.config');
 const fs = require('fs');
 
 exports.connectToStation = async (req, res, next) => {
