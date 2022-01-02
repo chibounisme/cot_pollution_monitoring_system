@@ -105,9 +105,7 @@ exports.signIn = async (req, res, next) => {
         }
 
         let userIdentity = await IdentityModel.Identity.findOne({
-            where: {
-                username: req.body.username
-            }
+            username: username
         });
 
         if (!userIdentity) {
