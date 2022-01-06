@@ -13,23 +13,17 @@ client.on('connect', async function () {
     console.log('Connected to MQTT Broker');
 
     let stations = await StationsModel.Station.find();
-    
+    let station_ids = stations.map(station => station_id);
 
-    for (let station in stations) {
-        client.subscribe(station.station_id, (err) => {
+    for (let station_id in station_ids) {
+        client.subscribe(station_id, (err) => {
             if (err) {
-                console.log('couldn\'t subscribe to station: ' + station.station_id);
+                console.log('couldn\'t subscribe to station: ' + station_id);
             } else {
-                console.log('Successfully subsribed to station: ' + station.station_id);
+                console.log('Successfully subsribed to station: ' + station_id);
             }
         })
     }
-
-    client.subscribe(config.mqtt_topic, (err) => {
-        if (err) {
-            console.log('couldnt subscribe to ' + config.mqtt_topic + ' topic');
-        }
-    })
 })
 
 client.on('message', async (topic, message) => {
