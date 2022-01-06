@@ -31,19 +31,23 @@
     </ion-item>
     <ion-item>
       <ion-label>Latest Microphone Noise level</ion-label>
-      <ion-note slot="end">{{ station.lastMicrophoneLevel }} dB</ion-note>
+      <ion-note slot="end">{{ station.lastMicrophoneLevel !== -1 ? station.lastMicrophoneLevel : 'None' }} dB</ion-note>
     </ion-item>
     <ion-item>
       <ion-label>Average Microphone Noise level</ion-label>
-      <ion-note slot="end">{{ station.avgMicrophonelevel }} dB</ion-note>
+      <ion-note slot="end">{{ station.avgMicrophonelevel !== -1 ? station.avgMicrophonelevel : 'None' }} dB</ion-note>
     </ion-item>
     <ion-item>
       <ion-label>Latest Air Pollution level</ion-label>
       <ion-note slot="end">{{ station.lastAirPollutionLevel }}</ion-note>
     </ion-item>
     <ion-item>
-      <ion-label>Average Air Pollution level</ion-label>
-      <ion-note slot="end">{{ station.avgAirPollutionLevel }}</ion-note>
+      <ion-label>Notify when microphone level is exceeding threshold:</ion-label>
+      <ion-toggle color="primary" [(ngModel)]="station.isAlertMicrophoneOn"></ion-toggle>
+    </ion-item>
+    <ion-item>
+      <ion-label position="fixed" [(ngModel)]="station.alertMicrophoneLevelThreshold">Fixed Label</ion-label>
+      <ion-input></ion-input>
     </ion-item>
   </ion-list>
 
