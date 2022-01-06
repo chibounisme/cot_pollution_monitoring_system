@@ -10,6 +10,10 @@ import { environment } from '../../environments/environment';
 import { BehaviorSubject } from 'rxjs';
 import { Router } from '@angular/router';
 
+import { LocalNotifications } from '@capacitor/local-notifications';
+import { StationsService } from './stations.service';
+import { ToastController } from '@ionic/angular';
+
 @Injectable({
   providedIn: 'root'
 })
@@ -19,6 +23,9 @@ export class AuthService {
 
   backendUrl: string = environment.backendUrl;
   sha256Secret: string = environment.sha265Secret;
+
+  // for showing notifications
+  notificationRunner = null;
 
   // pre-signin
   codeVerifier: string;
@@ -36,7 +43,7 @@ export class AuthService {
 
   authState = new BehaviorSubject(false);
 
-  constructor(private storage: Storage, private http: HttpClient, private router: Router) {
+  constructor(public toastController: ToastController, private storage: Storage, private http: HttpClient, private router: Router, private stationServices: StationsService) {
     this.jwtHelper = new JwtHelperService();
     this.init();
   }
@@ -106,6 +113,8 @@ export class AuthService {
       this.router.navigate(['login']);
       this.authState.next(false);
     });
+
+    clearInterval(this.notificationRunner);
   }
 
   signUp(firstname, lastname, username, password, email) {
@@ -120,5 +129,17 @@ export class AuthService {
 
   getAccessToken() {
     return this.authToken;
+  }
+
+  activateRunner() {
+    setInterval(() => {
+      this.stationServices.getUserStations().subscribe(stations => {
+        for (let station of stations) {
+          {
+            
+          }
+        }
+      });
+    }, 5000);
   }
 }

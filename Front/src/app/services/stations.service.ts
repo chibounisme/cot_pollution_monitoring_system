@@ -32,11 +32,4 @@ export class StationsService {
   public disableUserStation(stationId: string) {
     return this.http.get<any>(`${this.backendUrl}/stations/${stationId}/disable`);
   }
-  
-  public updateMicrophoneThreshold(stationId: string, isMicrophoneNotificationOn: boolean, microphoneThreshold: number) {
-    return this.http.post<any>(`${this.backendUrl}/stations/${stationId}/alert`, {
-      isAlertMicrophoneOn: isMicrophoneNotificationOn,
-      alertMicrophoneLevelThreshold: microphoneThreshold
-    });
-  }
 }

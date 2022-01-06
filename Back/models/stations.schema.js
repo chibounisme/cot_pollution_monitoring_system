@@ -17,29 +17,9 @@ const stationSchema = new Schema({
     lastUpdatedAt: {
         type: Date
     },
-    avgMicrophonelevel: {
-        type: Number,
-        default: -1
-    },
-    lastMicrophoneLevel: {
-        type: Number,
-        default: -1
-    },
     lastAirPollutionLevel: {
         type: String,
         default: 'None'
-    },
-    microphonePayloadCount: {
-        type: Number,
-        default: 0
-    },
-    alertMicrophoneLevelThreshold: {
-        type: Number,
-        default: '50'
-    },
-    isAlertMicrophoneOn: {
-        type: Boolean,
-        default: true
     }
 }, {
     toObject: { virtuals: true },
