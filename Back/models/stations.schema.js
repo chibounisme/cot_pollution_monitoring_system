@@ -57,9 +57,9 @@ exports.createStation = async (stationData) => {
 
     mqtt.MQTTClient.subscribe(station.station_id, (err) => {
         if (err) {
-            console.log('couldn\'t subscribe to station: ' + station_id);
+            console.log('couldn\'t subscribe to station: ' + station.station_id);
         } else {
-            console.log('Successfully subscribed to station: ' + station_id);
+            console.log('Successfully subscribed to station: ' + station.station_id);
         }
     });
 
