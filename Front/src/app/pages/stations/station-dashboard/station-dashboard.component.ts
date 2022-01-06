@@ -16,6 +16,8 @@ export class StationDashboardComponent implements OnInit, OnDestroy {
   stationId: any;
   map: Leaflet.Map;
   updateToast: HTMLIonToastElement;
+  isAlertMicrophoneOn: boolean;
+  currentMicrophoneThreshold: number;
 
   ionViewDidEnter() { this.leafletMap(); }
 
@@ -43,6 +45,8 @@ export class StationDashboardComponent implements OnInit, OnDestroy {
     public toastController: ToastController) {
     this.loadedData = false;
     this.stationId = this.route.snapshot.params['stationId'];
+    this.isAlertMicrophoneOn = false;
+    this.currentMicrophoneThreshold = 0;
   }
 
   ngOnInit() {
@@ -50,6 +54,8 @@ export class StationDashboardComponent implements OnInit, OnDestroy {
       this.loadedData = true;
       this.station = data;
       this.station.lastUpdatedAt = moment(this.station.lastUpdatedAt).fromNow();
+      this.isAlertMicrophoneOn = data.isAlertMicrophoneOn;
+      this.currentMicrophoneThreshold = data.alertMicrophoneLevelThreshold;
     });
   }
 
@@ -63,6 +69,7 @@ export class StationDashboardComponent implements OnInit, OnDestroy {
       this.station = data;
 
       this.station.lastUpdatedAt = moment(this.station.lastUpdatedAt).fromNow();
+      this.isAlertMicrophoneOn = data.isAlertMicrophoneOn;
 
       this.updateToast = await this.toastController.create({
         duration: 2500,
@@ -74,5 +81,17 @@ export class StationDashboardComponent implements OnInit, OnDestroy {
       await this.updateToast.present();
       event.target.complete();
     });
+  }
+
+  updateMicrophoneAlertIsOn() {
+    this.stationsService.updateMicrophoneThreshold(this.stationId, !this.isAlertMicrophoneOn, this.currentMicrophoneThreshold)
+      .subscribe(_ => {
+        this.isAlertMicrophoneOn = !this.isAlertMicrophoneOn;
+      });
+  }
+
+  updateMicrophoneAlertThreshold() {
+    this.stationsService.updateMicrophoneThreshold(this.stationId, this.isAlertMicrophoneOn, this.currentMicrophoneThreshold)
+      .subscribe(_ => { });
   }
 }
