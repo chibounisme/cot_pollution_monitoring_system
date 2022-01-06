@@ -1,6 +1,8 @@
 const mongoose = require('mongoose'),
     Schema = mongoose.Schema;
 
+const mqtt = require('../main/mqtt.client');
+
 const stationSchema = new Schema({
     station_name: String,
     station_id: String,
@@ -57,7 +59,17 @@ const Station = mongoose.model('Station', stationSchema);
 
 exports.Station = Station;
 
-exports.createStation = (stationData) => {
+exports.createStation = async (stationData) => {
     const station = new Station(stationData);
-    return station.save();
+    const data = await station.save();
+
+    mqtt.MQTTClient.subscribe(station.station_id, (err) => {
+        if (err) {
+            console.log('couldn\'t subscribe to station: ' + station_id);
+        } else {
+            console.log('Successfully subscribed to station: ' + station_id);
+        }
+    });
+
+    return data;
 };

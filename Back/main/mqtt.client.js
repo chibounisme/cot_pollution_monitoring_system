@@ -14,16 +14,15 @@ client.on('connect', async function () {
 
     let stations = await StationsModel.Station.find();
     let station_ids = stations.map(station => station.station_id);
-    console.log(station_ids);
 
     for (let station_id of station_ids) {
         client.subscribe(station_id, (err) => {
             if (err) {
                 console.log('couldn\'t subscribe to station: ' + station_id);
             } else {
-                console.log('Successfully subsribed to station: ' + station_id);
+                console.log('Successfully subscribed to station: ' + station_id);
             }
-        })
+        });
     }
 })
 
@@ -32,3 +31,4 @@ client.on('message', async (topic, message) => {
     console.log('Received MQTT Data: ' + mqttData);
 })
 
+exports.MQTTClient = client;
