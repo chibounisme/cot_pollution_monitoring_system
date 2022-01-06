@@ -165,7 +165,7 @@ exports.updateAlert = async (req, res) => {
 
     let {alertMicrophoneLevelThreshold, isAlertMicrophoneOn} = req.body;
     console.log(JSON.stringify(req.body, 0, null))
-    if (!(alertMicrophoneLevelThreshold && isAlertMicrophoneOn)) {
+    if (!(alertMicrophoneLevelThreshold != null && isAlertMicrophoneOn != null)) {
         res.status(401).send({
             message: 'Missing data'
         });
