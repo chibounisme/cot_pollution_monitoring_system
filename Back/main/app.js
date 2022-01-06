@@ -8,7 +8,7 @@ app.use(express.json());
 //set default message
 app.get('/', (req, res) => {
     res.json({
-        message: 'The Server is working as it should :)'
+        message: 'The Server is working as it should ❤'
     });
 });
 

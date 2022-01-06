@@ -1,0 +1,91 @@
+[
+    {
+        "id": "c19ea568d1df545e",
+        "type": "tab",
+        "label": "Flow 1",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "d31d79640ff27e2a",
+        "type": "rpi-gpio in",
+        "z": "c19ea568d1df545e",
+        "name": "GPIO Air Quality Input",
+        "pin": "4",
+        "intype": "tri",
+        "debounce": "300",
+        "read": true,
+        "bcm": true,
+        "x": 120,
+        "y": 260,
+        "wires": [
+            [
+                "ba9213c4a840a233"
+            ]
+        ]
+    },
+    {
+        "id": "84a57de2201bd682",
+        "type": "mqtt out",
+        "z": "c19ea568d1df545e",
+        "name": "MQTT Publisher: Send to COT MQTT Broker (Server)",
+        "topic": "120",
+        "qos": "",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "4fac01c640df7dc3",
+        "x": 760,
+        "y": 240,
+        "wires": []
+    },
+    {
+        "id": "ba9213c4a840a233",
+        "type": "function",
+        "z": "c19ea568d1df545e",
+        "name": "Convert payload to String",
+        "func": "msg.payload = msg.payload === 0 ? 'Bad' : 'Good';\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 390,
+        "y": 160,
+        "wires": [
+            [
+                "84a57de2201bd682"
+            ]
+        ]
+    },
+    {
+        "id": "4fac01c640df7dc3",
+        "type": "mqtt-broker",
+        "name": "cot_main_mosquitto_broker",
+        "broker": "mqtt://mqtt.pmscot.me",
+        "port": "1883",
+        "clientid": "",
+        "autoConnect": true,
+        "usetls": false,
+        "protocolVersion": "4",
+        "keepalive": "60",
+        "cleansession": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willPayload": "",
+        "willMsg": {},
+        "sessionExpiry": ""
+    }
+]
