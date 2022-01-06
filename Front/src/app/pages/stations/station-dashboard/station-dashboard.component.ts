@@ -3,6 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { StationsService } from 'src/app/services/stations.service';
 import * as Leaflet from 'leaflet';
 import { ToastController } from '@ionic/angular';
+import * as moment from 'moment';
 
 @Component({
   selector: 'app-station-dashboard',
@@ -45,11 +46,10 @@ export class StationDashboardComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    console.log(this.stationId);
     this.stationsService.getStationByStationId(this.stationId).subscribe(data => {
       this.loadedData = true;
       this.station = data;
-      console.log(JSON.stringify(this.station));
+      this.station.lastUpdatedAt = moment(this.station.lastUpdatedAt).fromNow();
     });
   }
 
@@ -58,10 +58,11 @@ export class StationDashboardComponent implements OnInit, OnDestroy {
   }
 
   doRefresh(event) {
-    console.log('Begin async operation');
     this.stationsService.getStationByStationId(this.stationId).subscribe(async data => {
       this.loadedData = true;
       this.station = data;
+
+      this.station.lastUpdatedAt = moment(this.station.lastUpdatedAt).fromNow();
 
       this.updateToast = await this.toastController.create({
         duration: 2500,

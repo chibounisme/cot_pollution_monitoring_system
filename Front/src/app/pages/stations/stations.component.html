@@ -1,13 +1,14 @@
 <ion-header *ngIf="!isScanning">
   <ion-toolbar>
-    <ion-title>
-      Stations List
-    </ion-title>
+    <ion-title slot="start">Stations List</ion-title>
+    <ion-menu-toggle slot="end">
+      <ion-menu-button>
+        <ion-icon name="reorder-three-outline"></ion-icon>
+      </ion-menu-button>
+    </ion-menu-toggle>
   </ion-toolbar>
 </ion-header>
-
 <br>
-
 <ion-content *ngIf="!isScanning">
   <ion-card>
     <ion-card-content>Add, enable, disable and view your stations information.</ion-card-content>

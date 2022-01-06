@@ -1,9 +1,12 @@
 <ion-content *ngIf="loadedData">
   <ion-header>
     <ion-toolbar>
-      <ion-title>
-        {{ station.station_name }}
-      </ion-title>
+      <ion-title slot="start">{{ station.station_name }}</ion-title>
+      <ion-menu-toggle slot="end">
+        <ion-menu-button>
+          <ion-icon name="reorder-three-outline"></ion-icon>
+        </ion-menu-button>
+      </ion-menu-toggle>
     </ion-toolbar>
   </ion-header>
 
@@ -20,7 +23,7 @@
   <ion-list>
     <ion-item>
       <ion-label>Is activated:</ion-label>
-      <ion-note slot="end">{{ station.isEnabled }}</ion-note>
+      <ion-note slot="end">{{ station.isEnabled ? 'Activated' : 'Disabled' }}</ion-note>
     </ion-item>
     <ion-item>
       <ion-label>Last Updated</ion-label>
@@ -36,11 +39,11 @@
     </ion-item>
     <ion-item>
       <ion-label>Latest Air Pollution level</ion-label>
-      <ion-note slot="end">{{ station.lastAirPollutionLevel }} %</ion-note>
+      <ion-note slot="end">{{ station.lastAirPollutionLevel }}</ion-note>
     </ion-item>
     <ion-item>
       <ion-label>Average Air Pollution level</ion-label>
-      <ion-note slot="end">{{ station.avgAirPollutionLevel }} %</ion-note>
+      <ion-note slot="end">{{ station.avgAirPollutionLevel }}</ion-note>
     </ion-item>
   </ion-list>
 

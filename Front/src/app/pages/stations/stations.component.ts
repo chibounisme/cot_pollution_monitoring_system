@@ -60,35 +60,62 @@ export class StationsComponent implements OnInit {
     this.isScanning = false;
     if (result.hasContent) {
       await BarcodeScanner.showBackground();
+      var resultJSON;
 
-      const stationId = JSON.parse(result.content).station_id;
-      const stationName = JSON.parse(result.content).station_name;
-      // get the coordinates
-      const coordinates = await Geolocation.getCurrentPosition();
+      try {
+        resultJSON = JSON.parse(result.content);
+      } catch (e) {
+        resultJSON = null;
+      }
 
-      // check if station is Added
-      this.stationService.connectToStation(stationId, stationName, coordinates.coords.latitude, coordinates.coords.longitude)
-        .subscribe(async data => {
-          this.isAddStationModalOpen = false;
+      if (!resultJSON) {
+        this.updateToast = await this.toastController.create({
+          duration: 4500,
+          message: 'Wrong QR Code, please scan it directly from the station!',
+          color: 'danger'
+        });
+        await this.updateToast.present();
+      } else {
+        const stationId = resultJSON.station_id;
+        const stationName = resultJSON.station_name;
 
-          this.stationService.getUserStations().subscribe(async stationData => {
-            this.stations = stationData;
-            this.updateToast = await this.toastController.create({
-              duration: 2500,
-              message: 'Connected to station successfully!',
-              color: 'success'
-            });
-            await this.updateToast.present();
-          });
-        }, async err => {
+        if (!(stationId && stationName)) {
           this.updateToast = await this.toastController.create({
-            duration: 2500,
-            message: 'The station has been already added to an account!',
+            duration: 4500,
+            message: 'Wrong QR Code, please scan it directly from the station!',
             color: 'danger'
           });
-
           await this.updateToast.present();
-        });
+        } else {
+          // get the coordinates
+          const coordinates = await Geolocation.getCurrentPosition();
+
+          // check if station is Added
+          this.stationService.connectToStation(stationId, stationName, coordinates.coords.latitude, coordinates.coords.longitude)
+            .subscribe(async data => {
+              this.isAddStationModalOpen = false;
+
+              this.stationService.getUserStations().subscribe(async stationData => {
+                this.stations = stationData;
+                this.updateToast = await this.toastController.create({
+                  duration: 2500,
+                  message: 'Connected to station successfully!',
+                  color: 'success'
+                });
+                await this.updateToast.present();
+              });
+            }, async err => {
+              this.updateToast = await this.toastController.create({
+                duration: 2500,
+                message: 'The station has been already added to an account!',
+                color: 'danger'
+              });
+
+              await this.updateToast.present();
+            });
+        }
+      }
+
     }
   };
 

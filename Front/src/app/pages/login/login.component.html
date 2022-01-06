@@ -1,9 +1,16 @@
-<div>
-  <ion-card>
-    <ion-card-header>
-      <ion-card-title>Welcome to PMS</ion-card-title>
-    </ion-card-header>
+<ion-content>
+  <ion-header>
+    <ion-toolbar>
+      <ion-title slot="start">Welcome to PMS</ion-title>
+      <ion-menu-toggle slot="end">
+        <ion-menu-button>
+          <ion-icon name="reorder-three-outline"></ion-icon>
+        </ion-menu-button>
+      </ion-menu-toggle>
+    </ion-toolbar>
+  </ion-header>
 
+  <ion-card>
     <ion-card-content>
       Track pollution within your city with a few button presses.
     </ion-card-content>
@@ -19,26 +26,30 @@
           <ion-label position="floating">Username</ion-label>
           <ion-input formControlName="username" type="text"></ion-input>
         </ion-item>
-        <div class="error ion-padding" *ngIf="loginForm.controls.username.dirty && loginForm.controls.username.errors?.required">
+        <div class="error ion-padding"
+          *ngIf="loginForm.controls.username.dirty && loginForm.controls.username.errors?.required">
           Name is required.
         </div>
-        <div class="error ion-padding" *ngIf="loginForm.controls.username.dirty && loginForm.controls.username.errors?.minlength">
+        <div class="error ion-padding"
+          *ngIf="loginForm.controls.username.dirty && loginForm.controls.username.errors?.minlength">
           Name should be min 5 chars long.
         </div>
         <ion-item>
           <ion-label position="floating">Password</ion-label>
           <ion-input formControlName="password" type="password"></ion-input>
         </ion-item>
-        <div class="error ion-padding" *ngIf="loginForm.controls.password.dirty && loginForm.controls.password.errors?.required">
+        <div class="error ion-padding"
+          *ngIf="loginForm.controls.password.dirty && loginForm.controls.password.errors?.required">
           Password is required.
         </div>
-        <div class="error ion-padding" *ngIf="loginForm.controls.password.dirty && loginForm.controls.password.errors?.minlength">
+        <div class="error ion-padding"
+          *ngIf="loginForm.controls.password.dirty && loginForm.controls.password.errors?.minlength">
           Password should be min 8 chars long.
         </div>
 
         <ion-row>
           <ion-col>
-            <ion-button type="submit" color="primary" expand="block" [disabled]="loginForm.invalid" >Login</ion-button>
+            <ion-button type="submit" color="primary" expand="block" [disabled]="loginForm.invalid">Login</ion-button>
           </ion-col>
         </ion-row>
       </ion-card-content>
@@ -46,7 +57,7 @@
   </form>
   <ion-content class="ion-text-center">
     <div>
-     <h4 class="gray">Don't have an account? <a routerLink="/register">Sign Up</a></h4>
+      <h4 class="gray">Don't have an account? <a routerLink="/register">Sign Up</a></h4>
     </div>
-   </ion-content>
-</div>
+  </ion-content>
+</ion-content>
