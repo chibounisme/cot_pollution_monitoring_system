@@ -66,13 +66,13 @@ export class StationsComponent implements OnInit {
       // get the coordinates
       const coordinates = await Geolocation.getCurrentPosition();
 
-      // check if station is Added 
+      // check if station is Added
       this.stationService.connectToStation(stationId, stationName, coordinates.coords.latitude, coordinates.coords.longitude)
         .subscribe(async data => {
           this.isAddStationModalOpen = false;
 
-          this.stationService.getUserStations().subscribe(async data => {
-            this.stations = data;
+          this.stationService.getUserStations().subscribe(async stationData => {
+            this.stations = stationData;
             this.updateToast = await this.toastController.create({
               duration: 2500,
               message: 'Connected to station successfully!',
