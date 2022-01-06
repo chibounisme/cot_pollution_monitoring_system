@@ -13,7 +13,7 @@ client.on('connect', async function () {
     console.log('Connected to MQTT Broker');
 
     let stations = await StationsModel.Station.find();
-    let station_ids = stations.map(station => station_id);
+    let station_ids = stations.map(station => station.station_id);
 
     for (let station_id in station_ids) {
         client.subscribe(station_id, (err) => {
