@@ -17,19 +17,19 @@ const stationSchema = new Schema({
     },
     avgMicrophonelevel: {
         type: Number,
-        default: 0
+        default: -1
     },
     lastMicrophoneLevel: {
         type: Number,
-        default: 0
+        default: -1
     },
     avgAirPollutionLevel: {
-        type: Number,
-        default: 0
+        type: String,
+        default: 'None'
     },
     lastAirPollutionLevel: {
-        type: Number,
-        default: 0
+        type: String,
+        default: 'None'
     },
     microphonePayloadCount: {
         type: Number,
@@ -38,6 +38,14 @@ const stationSchema = new Schema({
     airPollutionPayloadCount: {
         type: Number,
         default: 0
+    },
+    alertMicrophoneLevelThreshold: {
+        type: Number,
+        default: '50'
+    },
+    isAlertMicrophoneOn: {
+        type: Boolean,
+        default: true
     }
 }, {
     toObject: { virtuals: true },

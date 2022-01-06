@@ -11,6 +11,5 @@ module.exports = {
     'mqtt_host': '',
     'mqtt_user': '',
     'mqtt_password': '',
-    'mqtt_port': '',
-    'mqtt_topic': ''
+    'mqtt_port': ''
 }
