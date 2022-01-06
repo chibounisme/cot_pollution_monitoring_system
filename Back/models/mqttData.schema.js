@@ -4,7 +4,8 @@ const mongoose = require('mongoose'),
 const mqttDataSchema = new Schema({
     timestamp: Date,
     topic: String,
-    payload: String
+    payload: String,
+    sensorType: String
 }, {
     toObject: { virtuals: true },
     toJSON: { virtuals: true },

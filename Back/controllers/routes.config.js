@@ -9,4 +9,6 @@ exports.routesConfig = function (app) {
     app.get('/stations/:stationId/enable', StationController.enableStation);
     
     app.get('/stations/:stationId/disable', StationController.disableStation);
+
+    app.post('/stations/:stationId/alert', StationController.updateAlert);
 };

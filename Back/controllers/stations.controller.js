@@ -142,3 +142,38 @@ exports.disableStation = async (req, res) => {
 
     res.status(200).json(result);
 };
+
+exports.updateAlert = async (req, res) => {
+    const token = req.headers['authorization'].split('Bearer ')[1];
+
+    const secretKey = fs.readFileSync(config['key-file']);
+    const payload = jwt.verify(token, secretKey, { algorithms: 'RS512' });
+    if (!payload) {
+        res.status(402).json({
+            message: 'Invalid JWT'
+        });
+        return;
+    }
+
+    let result = await StationModel.Station.findById(req.params.stationId);
+    if (!result) {
+        res.status(400).send({
+            message: 'there was an error with getting the user data'
+        });
+        return;
+    }
+
+    let {alertMicrophoneLevelThreshold, isAlertMicrophoneOn} = req.body;
+    if (!(alertMicrophoneLevelThreshold && isAlertMicrophoneOn)) {
+        res.status(401).send({
+            message: 'Missing data'
+        });
+        return;
+    }
+
+    result.alertMicrophoneLevelThreshold = alertMicrophoneLevelThreshold;
+    result.isAlertMicrophoneOn = isAlertMicrophoneOn;
+    await result.save();
+
+    res.status(200).json(result);
+};

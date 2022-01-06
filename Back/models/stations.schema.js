@@ -25,19 +25,11 @@ const stationSchema = new Schema({
         type: Number,
         default: -1
     },
-    avgAirPollutionLevel: {
-        type: String,
-        default: 'None'
-    },
     lastAirPollutionLevel: {
         type: String,
         default: 'None'
     },
     microphonePayloadCount: {
-        type: Number,
-        default: 0
-    },
-    airPollutionPayloadCount: {
         type: Number,
         default: 0
     },

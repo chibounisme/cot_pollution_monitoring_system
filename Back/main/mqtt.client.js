@@ -27,8 +27,26 @@ client.on('connect', async function () {
 })
 
 client.on('message', async (topic, message) => {
-    const mqttData = await MQTTDataModel.saveMQTTData({topic, payload: message});
+    const data = JSON.parse(message);
+    const mqttData = await MQTTDataModel.saveMQTTData({ topic, payload: data.payload, sensorType: data.sensorType });
     console.log('Received MQTT Data: ' + mqttData);
+
+    // update mqtt data 
+    let station = await StationsModel.Station.findOne({ station_id: topic });
+    if (station.isEnabled) {
+        if (station) {
+            if(data.sensorType == 'microphone') {
+                station.avgMicrophonelevel = ((station.avgMicrophonelevel *  station.microphonePayloadCount) + data.payload) / (station.avgMicrophonelevel + 1);
+                station.lastMicrophoneLevel = Number(data.payload);
+                station.microphonePayloadCount++;
+            } else if(data.sensorType == 'air') {
+                station.lastAirPollutionLevel = data.payload;
+            }
+    
+            await station.save();
+            console.log('Updated station with id: ' + topic + ' with live MQTT Data!');
+        }
+    }
 })
 
 exports.MQTTClient = client;
