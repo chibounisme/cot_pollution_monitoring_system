@@ -35,6 +35,7 @@ client.on('message', async (topic, message) => {
         console.log('Received MQTT Data: ' + mqttData);
 
         station.lastAirPollutionLevel = message;
+        station.lastUpdatedAt = new Date();
         await station.save();
     }
 })
