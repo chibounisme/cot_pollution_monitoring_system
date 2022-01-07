@@ -7,7 +7,7 @@ app.use(express.json());
 app.use(express.static('web'));
 
 //set default message
-app.get('/', (req, res) => {
+app.get(['/', '/login', '/register', '/stations/*', '/path', '/logout'], (req, res) => {
     res.sendFile(__dirname + '/web/index.html');
 });
 
