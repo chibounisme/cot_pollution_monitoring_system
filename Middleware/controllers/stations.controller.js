@@ -7,6 +7,10 @@ exports.connectToStation = async (req, res, next) => {
     const token = req.headers['authorization']?.split('Bearer ')[1];
 
     const secretKey = fs.readFileSync(config['key-file']);
+    if(!token) {
+        res.status(400).json({message: 'There was an error!'})
+        return;
+    }
     const payload = jwt.verify(token, secretKey, { algorithms: 'RS512' });
     if (!payload) {
         res.status(402).json({
@@ -48,6 +52,10 @@ exports.getStationsByStationId = async (req, res) => {
     const token = req.headers['authorization']?.split('Bearer ')[1];
 
     const secretKey = fs.readFileSync(config['key-file']);
+    if(!token) {
+        res.status(400).json({message: 'There was an error!'})
+        return;
+    }
     const payload = jwt.verify(token, secretKey, { algorithms: 'RS512' });
     if (!payload) {
         res.status(402).json({
@@ -102,6 +110,10 @@ exports.enableStation = async (req, res) => {
     const token = req.headers['authorization']?.split('Bearer ')[1];
 
     const secretKey = fs.readFileSync(config['key-file']);
+    if(!token) {
+        res.status(400).json({message: 'There was an error!'})
+        return;
+    }
     const payload = jwt.verify(token, secretKey, { algorithms: 'RS512' });
     if (!payload) {
         res.status(402).json({
@@ -129,6 +141,10 @@ exports.disableStation = async (req, res) => {
     const token = req.headers['authorization']?.split('Bearer ')[1];
 
     const secretKey = fs.readFileSync(config['key-file']);
+    if(!token) {
+        res.status(400).json({message: 'There was an error!'})
+        return;
+    }
     const payload = jwt.verify(token, secretKey, { algorithms: 'RS512' });
     if (!payload) {
         res.status(402).json({
@@ -155,6 +171,10 @@ exports.updateAlert = async (req, res) => {
     const token = req.headers['authorization']?.split('Bearer ')[1];
 
     const secretKey = fs.readFileSync(config['key-file']);
+    if(!token) {
+        res.status(400).json({message: 'There was an error!'})
+        return;
+    }
     const payload = jwt.verify(token, secretKey, { algorithms: 'RS512' });
     if (!payload) {
         res.status(402).json({
