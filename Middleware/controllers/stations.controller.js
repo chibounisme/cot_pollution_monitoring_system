@@ -74,23 +74,27 @@ exports.getStationsByUserId = async (req, res) => {
     if(!token) {
         res.status(400).json({message: 'There was an error!'})
     }
-    const payload = jwt.verify(token, secretKey, { algorithms: 'RS512' });
-    if (!payload) {
-        res.status(402).json({
-            message: 'Invalid JWT'
-        });
-        return;
+    try {
+        const payload = jwt.verify(token, secretKey, { algorithms: 'RS512' });
+        if (!payload) {
+            res.status(402).json({
+                message: 'Invalid JWT'
+            });
+            return;
+        }
+        
+        let result = await StationModel.Station.find({ user_id: payload.id });
+        if (!result) {
+            res.status(400).send({
+                message: 'there was an error with getting the user data'
+            });
+            return;
+        }
+        
+        res.status(200).json(result);
+    } catch(e) {
+        res.status(400).json({message: 'There was an error!'})
     }
-
-    let result = await StationModel.Station.find({ user_id: payload.id });
-    if (!result) {
-        res.status(400).send({
-            message: 'there was an error with getting the user data'
-        });
-        return;
-    }
-
-    res.status(200).json(result);
 };
 
 exports.enableStation = async (req, res) => {
