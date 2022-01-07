@@ -17,15 +17,12 @@ export class StationDashboardComponent implements OnInit, OnDestroy {
   map: Leaflet.Map;
   updateToast: HTMLIonToastElement;
 
-  constructor(private route: ActivatedRoute, private stationsService: StationsService,
-    public toastController: ToastController) {
-    this.loadedData = false;
-    this.stationId = this.route.snapshot.params.stationId;
-  }
-
-  ionViewDidEnter() { this.leafletMap(); }
-
+  
+  // ionViewDidEnter() {  }
+  
   leafletMap() {
+    console.log('I am here!')
+    console.log(document.getElementById('detailsMap'))
     this.map = Leaflet.map('detailsMap').setView([this.station.station_lat, this.station.station_long], 12);
     Leaflet.tileLayer('http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png', {
       attribution: 'edupala.com',
@@ -45,11 +42,18 @@ export class StationDashboardComponent implements OnInit, OnDestroy {
     this.map.addLayer(markPoint);
   }
 
+  constructor(private route: ActivatedRoute, private stationsService: StationsService,
+    public toastController: ToastController) {
+    this.loadedData = false;
+    this.stationId = this.route.snapshot.params.stationId;
+  }
+
   ngOnInit() {
     this.stationsService.getStationByStationId(this.stationId).subscribe(data => {
       this.loadedData = true;
       this.station = data;
       this.station.lastUpdatedAt = moment(this.station.lastUpdatedAt).fromNow();
+      this.leafletMap();
     });
   }
 
