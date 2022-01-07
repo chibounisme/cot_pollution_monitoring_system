@@ -53,7 +53,7 @@ export class LoginComponent implements OnInit {
             await this.loginToast.present();
 
             this.authService.activateRunner();
-            this.router.navigate(['/stations']);
+            this.router.navigate(['/station']);
           }, async err => {
             this.loadingIndicator.dismiss();
             this.loginToast.message = 'Login Failed!';

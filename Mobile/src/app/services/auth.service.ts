@@ -43,7 +43,8 @@ export class AuthService {
 
   authState = new BehaviorSubject(false);
 
-  constructor(public toastController: ToastController, private storage: Storage, private http: HttpClient, private router: Router, private stationServices: StationsService) {
+  constructor(public toastController: ToastController, private storage: Storage, 
+    private http: HttpClient, private router: Router, private stationServices: StationsService) {
     this.jwtHelper = new JwtHelperService();
     this.init();
   }

@@ -17,6 +17,12 @@ export class StationDashboardComponent implements OnInit, OnDestroy {
   map: Leaflet.Map;
   updateToast: HTMLIonToastElement;
 
+  constructor(private route: ActivatedRoute, private stationsService: StationsService,
+    public toastController: ToastController) {
+    this.loadedData = false;
+    this.stationId = this.route.snapshot.params.stationId;
+  }
+
   ionViewDidEnter() { this.leafletMap(); }
 
   leafletMap() {
@@ -37,12 +43,6 @@ export class StationDashboardComponent implements OnInit, OnDestroy {
       })
     });
     this.map.addLayer(markPoint);
-  }
-
-  constructor(private route: ActivatedRoute, private stationsService: StationsService,
-    public toastController: ToastController) {
-    this.loadedData = false;
-    this.stationId = this.route.snapshot.params['stationId'];
   }
 
   ngOnInit() {
