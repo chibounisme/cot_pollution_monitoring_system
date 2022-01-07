@@ -71,6 +71,9 @@ exports.getStationsByUserId = async (req, res) => {
     const token = req.headers['authorization']?.split('Bearer ')[1];
 
     const secretKey = fs.readFileSync(config['key-file']);
+    if(!token) {
+        res.status(400).json({message: 'There was an error!'})
+    }
     const payload = jwt.verify(token, secretKey, { algorithms: 'RS512' });
     if (!payload) {
         res.status(402).json({
