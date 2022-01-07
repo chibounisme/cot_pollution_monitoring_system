@@ -8,7 +8,12 @@ app.use(express.static(__dirname + '/web'));
 
 //set default message
 app.get(['/', '/login', '/register', '/station/*', '/path', '/logout'], (req, res) => {
-    console.log(req.subdomains);
+    if (req.subdomains.includes('api') || req.subdomains.includes('mqtt')) {
+        res.status(401).json({
+            message: 'You do not have access rights'
+        });
+        return;
+    }
     res.sendFile(__dirname + '/web/index.html');
 });
 
@@ -26,6 +31,7 @@ require('./mqtt.client');
 const SecurityRouter = require('../security/routes.config');
 const IdentityRouter = require('../identity/routes.config');
 const MainRouter = require('../controllers/routes.config');
+const { application } = require('express');
 
 //bind routes to the express application
 SecurityRouter.routesConfig(app);
