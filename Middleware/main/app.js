@@ -4,7 +4,7 @@ const cors = require('cors');
 
 app.use(cors());
 app.use(express.json());
-app.use(express.static(__dirnamr + '/web'));
+app.use(express.static(__dirname + '/git web'));
 
 //set default message
 app.get(['/', '/login', '/register', '/stations/*', '/path', '/logout'], (req, res) => {
