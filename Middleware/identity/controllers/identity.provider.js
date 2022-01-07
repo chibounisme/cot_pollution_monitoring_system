@@ -42,7 +42,7 @@ exports.signUp = async (req, res, next) => {
 };
 
 exports.getById = async (req, res) => {
-    const token = req.headers['authorization'].split('Bearer ')[1];
+    const token = req.headers['authorization']?.split('Bearer ')[1];
 
     const secretKey = fs.readFileSync(config['key-file']);
     const payload = jwt.verify(token, secretKey, { algorithms: 'RS512' });

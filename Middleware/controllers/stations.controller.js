@@ -4,7 +4,7 @@ const config = require('../main/env.config');
 const fs = require('fs');
 
 exports.connectToStation = async (req, res, next) => {
-    const token = req.headers['authorization'].split('Bearer ')[1];
+    const token = req.headers['authorization']?.split('Bearer ')[1];
 
     const secretKey = fs.readFileSync(config['key-file']);
     const payload = jwt.verify(token, secretKey, { algorithms: 'RS512' });
@@ -45,7 +45,7 @@ exports.connectToStation = async (req, res, next) => {
 };
 
 exports.getStationsByStationId = async (req, res) => {
-    const token = req.headers['authorization'].split('Bearer ')[1];
+    const token = req.headers['authorization']?.split('Bearer ')[1];
 
     const secretKey = fs.readFileSync(config['key-file']);
     const payload = jwt.verify(token, secretKey, { algorithms: 'RS512' });
@@ -68,7 +68,7 @@ exports.getStationsByStationId = async (req, res) => {
 };
 
 exports.getStationsByUserId = async (req, res) => {
-    const token = req.headers['authorization'].split('Bearer ')[1];
+    const token = req.headers['authorization']?.split('Bearer ')[1];
 
     const secretKey = fs.readFileSync(config['key-file']);
     const payload = jwt.verify(token, secretKey, { algorithms: 'RS512' });
@@ -91,7 +91,7 @@ exports.getStationsByUserId = async (req, res) => {
 };
 
 exports.enableStation = async (req, res) => {
-    const token = req.headers['authorization'].split('Bearer ')[1];
+    const token = req.headers['authorization']?.split('Bearer ')[1];
 
     const secretKey = fs.readFileSync(config['key-file']);
     const payload = jwt.verify(token, secretKey, { algorithms: 'RS512' });
@@ -118,7 +118,7 @@ exports.enableStation = async (req, res) => {
 };
 
 exports.disableStation = async (req, res) => {
-    const token = req.headers['authorization'].split('Bearer ')[1];
+    const token = req.headers['authorization']?.split('Bearer ')[1];
 
     const secretKey = fs.readFileSync(config['key-file']);
     const payload = jwt.verify(token, secretKey, { algorithms: 'RS512' });
@@ -144,7 +144,7 @@ exports.disableStation = async (req, res) => {
 };
 
 exports.updateAlert = async (req, res) => {
-    const token = req.headers['authorization'].split('Bearer ')[1];
+    const token = req.headers['authorization']?.split('Bearer ')[1];
 
     const secretKey = fs.readFileSync(config['key-file']);
     const payload = jwt.verify(token, secretKey, { algorithms: 'RS512' });

@@ -76,7 +76,7 @@ exports.preSignIn = async (req, res, next) => {
     try {
         preAuthorization = req.headers['pre-authorization'];
 
-        let preAuthorizationHeader = Buffer.from(preAuthorization.split('Bearer ')[1], 'base64').toString();
+        let preAuthorizationHeader = Buffer.from(preAuthorization?.split('Bearer ')[1], 'base64').toString();
         let decodedTokenData = preAuthorizationHeader.split(':');
         let clientId = decodedTokenData[0];
         let codeChallenge = decodedTokenData[1];
@@ -131,7 +131,7 @@ exports.signIn = async (req, res, next) => {
 };
 
 exports.postSignIn = async (req, res, next) => {
-    let postAuthorizationHeader = Buffer.from(req.headers['post-authorization'].split('Bearer ')[1], 'base64').toString();
+    let postAuthorizationHeader = Buffer.from(req.headers['post-authorization']?.split('Bearer ')[1], 'base64').toString();
     let decodedTokenData = postAuthorizationHeader.split(':');
     let authCode = decodedTokenData[0];
     let codeVerifier = decodedTokenData[1];
@@ -162,7 +162,7 @@ exports.postSignIn = async (req, res, next) => {
 
 exports.refreshToken = async (req, res) => {
     try {
-        const token = req.headers['authorization'].split('Bearer ')[1];
+        const token = req.headers['authorization']?.split('Bearer ')[1];
 
         const payload = jwt.verify(token, cert, { algorithms: 'RS512' });
         if (!payload) {
