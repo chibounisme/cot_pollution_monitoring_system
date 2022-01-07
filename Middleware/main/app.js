@@ -4,11 +4,11 @@ const cors = require('cors');
 
 app.use(cors());
 app.use(express.json());
-app.use(express.static('web'));
+app.use(express.static(__dirnamr + '/web'));
 
 //set default message
 app.get(['/', '/login', '/register', '/stations/*', '/path', '/logout'], (req, res) => {
-    res.sendFile('web/index.html');
+    res.sendFile(__dirname + 'web/index.html');
 });
 
 //connect to all databases
