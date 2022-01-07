@@ -17,9 +17,8 @@ export class StationDashboardComponent implements OnInit, OnDestroy {
   map: Leaflet.Map;
   updateToast: HTMLIonToastElement;
 
-  
-  // ionViewDidEnter() {  }
-  
+  ionViewDidEnter() { this.leafletMap(); }
+
   leafletMap() {
     console.log('I am here!')
     console.log(document.getElementById('detailsMap'))
@@ -53,7 +52,6 @@ export class StationDashboardComponent implements OnInit, OnDestroy {
       this.loadedData = true;
       this.station = data;
       this.station.lastUpdatedAt = moment(this.station.lastUpdatedAt).fromNow();
-      this.leafletMap();
     });
   }
 
